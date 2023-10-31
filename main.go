@@ -23,9 +23,8 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// ルートを設定
-	e.GET("/", Hello)               //ホーム
-	e.POST("/login", Login)         //ログイン認証
-	e.GET("/accounts", GetAccounts) //アカウント一覧取得
+	e.GET("/", Hello)       //ホーム
+	e.POST("/login", Login) //ログイン認証
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -56,7 +55,7 @@ func ConnectionDB() *sql.DB {
 }
 
 // 行データを取得
-func GetRows(db *sql.DB) *sql.Rows {
+func FindUserEmail(db *sql.DB) *sql.Rows {
 	rows, err := db.Query("SELECT * FROM user")
 	if err != nil {
 		fmt.Println(http.StatusInternalServerError)
@@ -69,7 +68,7 @@ func Login(c echo.Context) error {
 	//DB設定
 	db := ConnectionDB()
 	defer db.Close()
-	rows := GetRows(db)
+	rows := FindUserEmail(db)
 
 	test := User{}    //空データ作成
 	var result []User //すべてのデータを挿入
@@ -82,8 +81,6 @@ func Login(c echo.Context) error {
 			result = append(result, test)
 		}
 	}
-
-	//fmt.Println(result) //パスワードを含む配列
 
 	u := new(User) //入力
 	if err := c.Bind(u); err != nil {
@@ -174,9 +171,4 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 		return token, err
 	}
 	return token, nil
-}
-
-// アカウント一覧取得
-func GetAccounts(c echo.Context) error {
-	return nil
 }
