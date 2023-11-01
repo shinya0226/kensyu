@@ -2,7 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -54,13 +56,18 @@ func ConnectionDB() *sql.DB {
 	return db
 }
 
-// 行データを取得
-func FindUserEmail(db *sql.DB) *sql.Rows {
-	rows, err := db.Query("SELECT * FROM user")
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError)
+// 該当するデータを取得
+func FindSingleRow(db *sql.DB, Email string) (*sql.DB, string, string, string, int) {
+	u := &User{}
+	err := db.QueryRow("SELECT * FROM user WHERE Email=?", Email).
+		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin)
+	if errors.Is(err, sql.ErrNoRows) {
+		fmt.Println("getSingleRow no records.")
 	}
-	return rows
+	if err != nil {
+		log.Fatalf("getSingleRow db.QueryRow error err:%v", err)
+	}
+	return db, *&u.Email, *&u.Name, *&u.Password, *&u.IsAdmin
 }
 
 // ログイン処理
@@ -68,65 +75,49 @@ func Login(c echo.Context) error {
 	//DB設定
 	db := ConnectionDB()
 	defer db.Close()
-	rows := FindUserEmail(db)
 
-	test := User{}    //空データ作成
-	var result []User //すべてのデータを挿入
-
-	for rows.Next() {
-		error := rows.Scan(&test.Email, &test.Password, &test.Name, &test.IsAdmin)
-		if error != nil {
-			fmt.Println(http.StatusInternalServerError)
-		} else {
-			result = append(result, test)
-		}
-	}
-
-	u := new(User) //入力
+	//入力処理
+	u := new(User)
 	if err := c.Bind(u); err != nil {
 		fmt.Println(http.StatusBadRequest)
 		return err
 	}
 
-	for i := 0; i < len(result); i++ {
-		pass := result[i].Password
+	//該当するユーザーの情報を抽出
+	db, email, name, password, isadmin := FindSingleRow(db, u.Email)
+
+	//Passwordが合致するとき
+	if u.Password == password {
+		pass := password
 		pass, _ = HashPassword(pass) //DBのパスワードのハッシュ化
-		ans := VerifyPassword(pass, u.Password)
-		//Emailが合致したとき
-		if result[i].Email == u.Email {
-			//Passwordが合致しないとき
-			if ans != nil {
-				fmt.Println(http.StatusNotFound)
-				fmt.Println("password error")
-				fmt.Println("email:" + u.Email)
-
-				return c.String(http.StatusCreated, "ログイン失敗")
-			} else {
-				fmt.Println(http.StatusOK)
-				fmt.Println("Login OK")
-				fmt.Println("email:" + u.Email)
-				fmt.Println("name:" + result[i].Name)
-				fmt.Print("isAdmin:")
-				fmt.Println(u.IsAdmin)
-
-				//JWTの作成
-				message, _ := CreateToken(u.Email)
-				fmt.Println("access_token:" + message) //アクセストークンの表示
-
-				return c.String(http.StatusCreated, "ログイン成功") //ユーザー画面表示
-
-			}
-			//Emailが合致しないとき
-		} else {
+		ans := VerifyPassword(pass, password)
+		//Passwordが合致しないとき
+		if ans != nil {
 			fmt.Println(http.StatusNotFound)
-			fmt.Println("email error")
-			fmt.Println("email:" + u.Email)
+			fmt.Println("password error")
+			fmt.Println("email:" + email)
+			return c.String(http.StatusCreated, "ログイン失敗")
+			//Email,Passwordが合致するとき
+		} else {
+			fmt.Println(http.StatusOK)
+			fmt.Println("Login OK")
+			fmt.Println("email:" + email)
+			fmt.Println("name:" + name)
+			fmt.Print("isAdmin:")
+			fmt.Println(isadmin)
+			//JWTの作成
+			message, _ := CreateToken(email)
+			fmt.Println("access_token:" + message) //アクセストークンの表示
 
-			return c.String(http.StatusCreated, "ログイン失敗") //ユーザー画面表示
+			return c.String(http.StatusCreated, "ログイン成功") //ユーザー画面表示
 		}
+		//Emailが合致しないとき
+	} else {
+		fmt.Println(http.StatusNotFound)
+		fmt.Println("email error")
+		fmt.Println("email:" + email)
+		return c.String(http.StatusCreated, "ログイン失敗")
 	}
-
-	return c.JSON(http.StatusCreated, u)
 }
 
 // パスワードの暗号化（DBからパスワードを取り出す時に使用）
