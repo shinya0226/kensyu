@@ -3,8 +3,9 @@ package main
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/shinya0226/kensyu/handler"
 )
 
 func main() {
@@ -17,6 +18,11 @@ func main() {
 
 	// ルートを設定
 	e.GET("/", Hello)
+
+	h := handler.Handler{} //TODO: DBをいれる？
+	e.POST("/login", func(ctx echo.Context) error {
+		return h.Login(ctx)
+	})
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
