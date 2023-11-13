@@ -1,4 +1,4 @@
-# version: 2.1
+version: 2.1
 jobs:
   # running commands on a basic image
   Hello-World:
