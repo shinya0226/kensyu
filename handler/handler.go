@@ -20,13 +20,15 @@ type (
 		Password string `json:"Password" form:"Password"`
 	}
 	Handler struct {
-		DB map[string]*User
+		DB map[string]*User // todo テストにおいてもDB接続する前提で書いた方がいい。よってこのパラメータは不要。
 	}
 )
 
+// todo: DB Connection に関連するソースコードを、 /infra/mysql に移動する
+
 // DBに接続
 func ConnectionDB() *sql.DB {
-	dsn := "root:Shinya0023@tcp(127.0.0.1:3306)/yamamoto?parseTime=true"
+	dsn := "root:Shinya0023@tcp(127.0.0.1:3306)/yamamoto?parseTime=true" // todo 環境変数から取得するようにする。
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Println(http.StatusInternalServerError)
@@ -38,13 +40,16 @@ func ConnectionDB() *sql.DB {
 // 該当するデータを取得
 func FindSingleRow(db *sql.DB, Email string) (*sql.DB, string, string) {
 	u := &User{}
+	// todo 以下でSQL インジェクションが発生しうるかを調査してください
 	if err := db.QueryRow("SELECT Email,Password FROM user WHERE Email = ?", Email).
 		Scan(&u.Email, &u.Password); err != nil {
 		//Emailが合致しないとき
 		fmt.Println(http.StatusNotFound)
-		log.Fatal(err)
+		log.Fatal(err) // todo ここえエラーなら、API Responseもエラーを返すべき
 	}
 	//Emailが合致するとき
+	// todo dbを返す必要はない
+	// todo userを返せば十分なはず
 	return db, *&u.Email, *&u.Password
 }
 
@@ -62,18 +67,19 @@ func (h *Handler) Login(c echo.Context) error {
 		return err
 	}
 
+	// todo 以下のコードのうち、echo に関係ない部分は、 usecase/ に移動する
 	//該当するユーザーの情報を抽出
 	db, email, password := FindSingleRow(db, u.Email)
 
 	pass := password
-	pass, _ = HashPassword(pass) //DBのパスワードのハッシュ化
+	pass, _ = HashPassword(pass) //DBのパスワードのハッシュ化　// todo エラーは握りつぶさない
 
 	if ans := VerifyPassword(pass, u.Password); ans != nil {
 		//Passwordが合致しないとき
 		fmt.Println(http.StatusNotFound)
 		fmt.Println("password error")
 		fmt.Println("email:" + email)
-		return c.JSON(http.StatusCreated, u)
+		return c.JSON(http.StatusCreated, u) // response code がおかしい。
 
 	} else {
 		//Email,Passwordが合致するとき
@@ -81,7 +87,7 @@ func (h *Handler) Login(c echo.Context) error {
 		fmt.Println("Login OK")
 		fmt.Println("email:" + email)
 		//JWTの作成
-		message, _ := CreateToken(email)
+		message, _ := CreateToken(email)       // todo API仕様書どおりのresponseを返す
 		fmt.Println("access_token:" + message) //アクセストークンの表示
 
 		return c.JSON(http.StatusCreated, u)
@@ -111,7 +117,7 @@ func CreateToken(email string) (string, error) {
 		"exp":  time.Now().Add(time.Hour * 1).Unix(), //1時間の有効期限を設定
 	}
 	//署名
-	var secretKey = "secret"
+	var secretKey = "secret" // todo secretKeyもハードコーディングしない。環境変数から受け取るようにする
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		fmt.Println(http.StatusInternalServerError)
