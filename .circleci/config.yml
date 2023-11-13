@@ -12,7 +12,7 @@ jobs:
           name: Saying Hello
           command: |
             echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+            go test -v
   # fetching code from the repo
   Fetch-Code:
     docker:
