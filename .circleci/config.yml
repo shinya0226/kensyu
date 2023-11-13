@@ -1,20 +1,21 @@
 version: 2.1
-orbs:
-  gor: hubci/goreleaser@2.0
-workflows:
-  main-wf:
-    jobs:
-      - test
-      - gor/release:
-          version: 1.7.0
-          go-version: '1.18'
-          dry-run: true
 jobs:
-  test:
+  build:
+    working_directory: ~/repo
     docker:
-      - image: cimg/go:1.18
+      - image: circleci/golang:1.14.6
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
-        name: Run Tests
-        command: go test -v
+          name: Install Dependencies
+          command: go get ./...
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Run tests
+          command: go test -v
