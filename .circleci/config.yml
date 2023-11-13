@@ -1,19 +1,20 @@
 version: 2.1
+orbs:
+  gor: hubci/goreleaser@2.0
+workflows:
+  main-wf:
+    jobs:
+      - test
+      - gor/release:
+          version: 1.7.0
+          go-version: '1.18'
+          dry-run: true
 jobs:
-  # running commands on a basic image
-  Hello-World:
+  test:
     docker:
-      - image: cimg/base:2021.04
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      - image: cimg/go:1.18
     steps:
       - checkout
       - run:
-          name: Run tests
-          command: go test -v
-workflows:
-  Example-Workflow:
-    jobs:
-      - Hello-World
-      
+        name: Run Tests
+        command: go test -v
