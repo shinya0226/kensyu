@@ -8,10 +8,10 @@ jobs:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
+      - checkout
       - run:
-          name: Saying Hello
-          command: 
-            go test -v
+          name: Run tests
+          command: go test -v
   # fetching code from the repo
   Fetch-Code:
     docker:
