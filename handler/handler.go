@@ -19,8 +19,8 @@ type (
 		Email    string `json:"Email" form:"Email"`
 		Password string `json:"Password" form:"Password"`
 	}
-	handler struct {
-		db map[string]*User
+	Handler struct {
+		DB map[string]*User
 	}
 )
 
@@ -49,7 +49,7 @@ func FindSingleRow(db *sql.DB, Email string) (*sql.DB, string, string) {
 }
 
 // ログイン処理
-func (h *handler) Login(c echo.Context) error {
+func (h *Handler) Login(c echo.Context) error {
 	//DB設定
 	db := ConnectionDB()
 	defer db.Close()

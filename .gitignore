@@ -1,0 +1,7 @@
+.aws-sam
+.idea
+.go-version
+
+# env resources
+.envrc
+.DS_Store
