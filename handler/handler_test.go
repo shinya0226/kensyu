@@ -1,4 +1,4 @@
-package handler
+package handler_test
 
 import (
 	"net/http"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	. "github.com/shinya0226/kensyu/handler"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +25,7 @@ func TestPost(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	h := &handler{mockDB}
+	h := &Handler{DB: mockDB}
 
 	// Assertions
 	if assert.NoError(t, h.Login(c)) {

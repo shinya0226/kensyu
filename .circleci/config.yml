@@ -5,6 +5,9 @@ jobs:
       - image: circleci/golang:1.14.6
     steps:
       - checkout
+      ## dbを立ち上げる
+      ## migrationをよみこむ
+      ## fixtureをよみこむ
       - run:
           name: Run tests
           command: go test -v
