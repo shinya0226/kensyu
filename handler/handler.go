@@ -2,11 +2,13 @@ package handler
 
 import (
 	"database/sql"
-	"entity"
 	"fmt"
-	"infrastructure/mysql"
-	"net/http"
-	"usecase"
+
+	"github.com/shinya0226/kensyu/infra/mysql"
+	"github.com/shinya0226/kensyu/net/http"
+	"github.com/shinya0226/kensyu/usecase"
+
+	"github.com/shinya0226/kensyu/entity"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"

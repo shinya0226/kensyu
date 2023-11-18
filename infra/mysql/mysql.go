@@ -1,4 +1,4 @@
-package handler
+package mysql
 
 import (
 	"database/sql"
