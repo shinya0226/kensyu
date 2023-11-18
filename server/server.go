@@ -1,14 +1,13 @@
-package main
+package server
 
 import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/shinya0226/kensyu/handler"
 )
 
-func main() {
+func server() {
 	// インスタンスを作成
 	e := echo.New()
 
@@ -19,7 +18,6 @@ func main() {
 	// ルートを設定
 	e.GET("/", Hello)
 
-	h := handler.Handler{} //TODO: DBをいれる？
 	e.POST("/login", func(ctx echo.Context) error {
 		return h.Login(ctx)
 	})
