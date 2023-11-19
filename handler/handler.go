@@ -41,12 +41,13 @@ func Login(c echo.Context) error {
 		return err
 	}
 
+	// todo 以下のコードのうち、echo に関係ない部分は、 usecase/ に移動する
+
 	//該当するユーザーの情報を抽出
 	email, name, password, isadmin := FindSingleRow(db, u.Email)
 
 	pass := password
 	pass, err := usecase.HashPassword(pass) //DBのパスワードのハッシュ化
-
 	if err != nil {
 		fmt.Println(http.StatusInternalServerError)
 		return err
