@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
+	"net/http"
+
 	"github.com/shinya0226/kensyu/infra/mysql"
-	"github.com/shinya0226/kensyu/net/http"
 	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/shinya0226/kensyu/entity"
@@ -30,7 +31,7 @@ func FindSingleRow(db *sql.DB, Email string) (string, string, string, int) {
 // ログイン処理
 func Login(c echo.Context) error {
 	//DB設定
-	db := mysql.Connection()
+	db := mysql.ConnectionDB()
 	defer db.Close()
 
 	//入力処理
