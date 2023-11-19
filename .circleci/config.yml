@@ -1,0 +1,13 @@
+# version: 2.1
+# jobs:
+#   build:
+#     docker:
+#       - image: cimg/golang:1.14.6
+#     steps:
+#       - checkout
+#       ## dbを立ち上げる
+#       ## migrationをよみこむ
+#       ## fixtureをよみこむ
+#       - run:
+#           name: Run tests
+#           command: go test -v

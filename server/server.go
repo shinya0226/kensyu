@@ -19,10 +19,7 @@ func main() {
 	// ルートを設定
 	e.GET("/", Hello)
 
-	h := handler.Handler{} //TODO: DBをいれる？
-	e.POST("/login", func(ctx echo.Context) error {
-		return h.Login(ctx)
-	})
+	e.POST("/login", handler.Login)
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
