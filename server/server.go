@@ -5,9 +5,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/shinya0226/kensyu/handler"
 )
 
-func server() {
+func main() {
 	// インスタンスを作成
 	e := echo.New()
 
@@ -18,6 +19,7 @@ func server() {
 	// ルートを設定
 	e.GET("/", Hello)
 
+	h := handler.Handler{} //TODO: DBをいれる？
 	e.POST("/login", func(ctx echo.Context) error {
 		return h.Login(ctx)
 	})
