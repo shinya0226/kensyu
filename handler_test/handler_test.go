@@ -11,12 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type (
-	User_In struct {
-		Email    string `json:"Email" form:"Email"`
-		Password string `json:"Password" form:"Password"`
-	}
-)
+type User_In struct {
+	Email    string `json:"Email" form:"Email"`
+	Password string `json:"Password" form:"Password"`
+}
 
 var (
 	mockDB = map[string]*User_In{
