@@ -24,14 +24,14 @@ var (
 )
 
 func TestPost(t *testing.T) {
-	// Setup
+	//設定
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	// Assertions
+	//確認
 	if assert.NoError(t, Login(c)) {
 		assert.Equal(t, http.StatusCreated, rec.Code)
 		assert.Equal(t, userJSON+"\n", rec.Body.String())
