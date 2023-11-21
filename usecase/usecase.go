@@ -6,8 +6,35 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/shinya0226/kensyu/entity"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type LoginUsecase struct {
+	repo entity.IUserRepository
+}
+
+func (u *LoginUsecase) Login(e entity.User) (string, error) {
+	found, err := u.repo.FindSingleRow(e.Email)
+	if err != nil {
+		return "", err
+	}
+
+	pass, err := HashPassword(e.Password) //DBのパスワードのハッシュ化
+	if err != nil {
+		return "", err
+	}
+
+	if ans := VerifyPassword(pass, found.Password); ans != nil {
+		//Passwordが合致しないとき
+		return "", err
+
+	}
+	//JWTの作成
+	message, err := CreateToken(e.Email)
+	return message, err
+
+}
 
 // パスワードの暗号化（DBからパスワードを取り出す時に使用）
 func HashPassword(rawPassword string) (string, error) {
