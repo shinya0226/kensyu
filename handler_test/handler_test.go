@@ -1,40 +1,46 @@
 package handler_test
 
-import (
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
-
-	"github.com/labstack/echo/v4"
-	. "github.com/shinya0226/kensyu/handler"
-	"github.com/stretchr/testify/assert"
-)
-
-type User_In struct {
-	Email    string `json:"Email" form:"Email"`
-	Password string `json:"Password" form:"Password"`
-}
-
-var (
-	mockDB = map[string]*User_In{
-		"shinya.yamamoto6@persol-pt.co.jp": &User_In{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10"},
-	}
-	userJSON = `{"Email":"shinya.yamamoto6@persol-pt.co.jp","Password":"yamamo10"}`
-)
+import "testing"
 
 func TestPost(t *testing.T) {
-	//設定
-	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-
-	//確認
-	if assert.NoError(t, Login(c)) {
-		assert.Equal(t, http.StatusCreated, rec.Code)
-		assert.Equal(t, userJSON+"\n", rec.Body.String())
+	tests := []struct {
+		Description string
+		Email       string `json:"Email"`
+		Password    string `json:"Password"`
+		want        bool
+	}{
+		{
+			Description: "EmailとPasswordが両方合致",
+			Email:       "shinya.yamamoto6@persol-pt.co.jp",
+			Password:    "yamamo10",
+			want:        true,
+		},
+		{
+			Description: "Emailエラーによる不合致",
+			Email:       "shinya.yamamoto6@persol-pt",
+			Password:    "yamamo10",
+			want:        false,
+		},
+		{
+			Description: "Passwordエラーによる不合致",
+			Email:       "shinya.yamamoto6@persol-pt.co.jp",
+			Password:    "yamamo",
+			want:        false,
+		},
+		{
+			Description: "Nothingエラーによる不合致",
+			Email:       "",
+			Password:    "",
+			want:        false,
+		},
 	}
 
+	db := mysql.ConnectionDB()
+
+	for _, tt := range tests {
+		t.Run(tt.Description, func(t *testing.T) {
+			//FindSingleRowはbool型で返した方がいいんじゃね？
+			if got := tt.FindSingleRow(db,tt.Email);got!=
+		})
+	}
 }
