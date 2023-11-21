@@ -1,0 +1,13 @@
+//DB設定
+db := mysql.ConnectionDB()
+
+// 入力処理
+u := new(entity.User)
+if err := c.Bind(u); err != nil {
+	fmt.Println(err)
+	// return err
+	return c.String(http.StatusBadRequest, "ログイン失敗")
+}
+
+var UserRepository IUserRepository
+UserRepository = userRepository{}
