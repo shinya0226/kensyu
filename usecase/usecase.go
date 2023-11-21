@@ -15,20 +15,19 @@ type LoginUsecase struct {
 }
 
 func (u *LoginUsecase) Login(e entity.User) (string, error) {
+	//該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
 	if err != nil {
 		return "", err
 	}
-
-	pass, err := HashPassword(e.Password) //DBのパスワードのハッシュ化
+	//DBのパスワードのハッシュ化
+	pass, err := HashPassword(e.Password)
 	if err != nil {
 		return "", err
 	}
-
+	//パスワードの比較
 	if ans := VerifyPassword(pass, found.Password); ans != nil {
-		//Passwordが合致しないとき
 		return "", err
-
 	}
 	//JWTの作成
 	message, err := CreateToken(e.Email)
