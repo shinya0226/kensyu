@@ -30,10 +30,6 @@ func ConnectionDB() *sql.DB {
 	return db
 }
 
-type userRepository struct {
-	db *sql.DB
-}
-
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
 	// todo 以下でSQL インジェクションが発生しうるかを調査してください
@@ -44,6 +40,10 @@ func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	}
 	//Emailが合致するとき
 	return u, nil
+}
+
+type userRepository struct {
+	db *sql.DB
 }
 
 func NewUserRepository(db *sql.DB) entity.IUserRepository {
