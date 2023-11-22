@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"net/http"
 	"os"
 	"time"
 
@@ -10,11 +9,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type LoginUsecase struct {
+type loginUsecase struct {
 	repo entity.IUserRepository
 }
 
-func (u *LoginUsecase) Login(e entity.User) (string, error) {
+func NewLoginUsecase(repo entity.IUserRepository) ILoginUsecase {
+	return &loginUsecase{repo: repo}
+}
+
+type ILoginUsecase interface {
+	Login(e entity.User) (string, error)
+}
+
+func (u *loginUsecase) Login(e entity.User) (string, error) {
 	//該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
 	if err != nil {
@@ -61,7 +68,7 @@ func CreateToken(email string) (string, error) {
 	var secretKey = JWT_SECRET
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		return string(http.StatusInternalServerError), err
+		return "", err
 
 	}
 	return tokenString, err
