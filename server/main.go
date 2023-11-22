@@ -19,7 +19,7 @@ func main() {
 	db := mysql.ConnectionDB()
 
 	userRepo := mysql.NewUserRepository(db)
-	loginUsecase := usecase.LoginUsecase(userRepo)
+	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	// ルートを設定
 	e.GET("/", handler.Hello)
