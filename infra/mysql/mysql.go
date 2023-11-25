@@ -7,31 +7,16 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/shinya0226/kensyu/entity"
+	"github.com/joho/godotenv"
 )
-
-type userRepository struct {
-	db *sql.DB
-}
-
-func NewUserRepository(db *sql.DB) entity.IUserRepository {
-	return &userRepository{db: db}
-}
-
-func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
-	u := entity.User{}
-	// todo 以下でSQL インジェクションが発生しうるかを調査してください
-	if err := ur.db.QueryRow("SELECT Email,Password FROM user WHERE Email = ?", email).
-		Scan(&u.Email, &u.Password); err != nil {
-		//Emailが合致しないとき
-		return u, err
-	}
-	//Emailが合致するとき
-	return u, nil
-}
 
 // DBに接続
 func ConnectionDB() *sql.DB {
+	//環境設定ファイルの読み込み
+	err := godotenv.Load("/Users/398755_black/Documents/src/kensyu/.env")
+	if err != nil {
+		fmt.Printf("読み込み失敗: %v", err)
+	}
 	//環境変数の設定
 	DBUser := os.Getenv("DB_USER")
 	DBPass := os.Getenv("DB_PASS")

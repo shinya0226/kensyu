@@ -3,11 +3,11 @@ package handler_test
 import "testing"
 
 func TestPost(t *testing.T) {
-	tests := []struct {
-		Description string
+	testCase := []struct {
+		Description string `json:"Description"`
 		Email       string `json:"Email"`
 		Password    string `json:"Password"`
-		want        bool
+		want        bool `json:"want"`
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
@@ -37,7 +37,7 @@ func TestPost(t *testing.T) {
 
 	db := mysql.ConnectionDB()
 
-	for _, tt := range tests {
+	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			//FindSingleRowはbool型で返した方がいいんじゃね？
 			if got := tt.FindSingleRow(db,tt.Email);got!=
