@@ -23,10 +23,10 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 }
 
 type LoginFormat struct {
-	email        string `json:"email"`
-	name         string `json:"Name"`
-	isAdmin      int    `json:"isAdmin"`
-	access_token string `json:"access_token"`
+	Email        string `json:"email"`
+	Name         string `json:"Name"`
+	IsAdmin      int    `json:"isAdmin"`
+	Access_token string `json:"access_token"`
 }
 
 // ログイン処理（詳細）
@@ -42,10 +42,10 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//formatに追加
-	logfo.email = eu.Email
-	logfo.name = eu.Name
-	logfo.isAdmin = eu.IsAdmin
-	logfo.access_token = message
+	logfo.Email = eu.Email
+	logfo.Name = eu.Name
+	logfo.IsAdmin = eu.IsAdmin
+	logfo.Access_token = message.Access_token
 
 	return c.JSON(http.StatusOK, logfo) //structに詰める
 }
