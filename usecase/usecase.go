@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -27,23 +26,19 @@ func (u *loginUsecase) Login(e entity.User) (string, error) {
 	found, err := u.repo.FindSingleRow(e.Email)
 
 	if err != nil {
-		fmt.Println("エラー1")
 		return "", err
 	}
 	//DBのパスワードのハッシュ化
 	pass, err := HashPassword(e.Password)
 	if err != nil {
-		fmt.Println("エラー2")
 		return "", err
 	}
 	//パスワードの比較
 	if ans := VerifyPassword(pass, found.Password); ans != nil {
-		fmt.Println("エラー3")
 		return "", err
 	}
 	//JWTの作成
 	message, err := CreateToken(e.Email)
-	fmt.Println("エラー4")
 	return message, err
 
 }
