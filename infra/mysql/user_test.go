@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
 	type user struct {
 		Email    string `json:"Email"`
@@ -31,7 +32,7 @@ func TestFindSingleRow(t *testing.T) {
 		},
 		{
 			Description: "Emailエラーによる不合致",
-			Email:       "shinya.yamamoto6@persol-pt",
+			Email:       "Emailは違うよ",
 			Password:    "yamamo10",
 			Want:        user{"", "", "", 0},
 			WantErr:     true,
@@ -39,7 +40,7 @@ func TestFindSingleRow(t *testing.T) {
 		{
 			Description: "Passwordエラーによる不合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
-			Password:    "yamamo",
+			Password:    "Passwordは違うよ",
 			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10", "山本真也", 0},
 			WantErr:     false,
 		},
