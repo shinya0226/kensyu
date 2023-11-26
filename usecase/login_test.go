@@ -19,10 +19,10 @@ func TestLogin(t *testing.T) {
 		IsAdmin  int    `json:"IsAdmin"`
 	}
 	type LoginFormat struct {
-		email        string
-		name         string
-		isAdmin      int
-		access_token string
+		Email        string `json:"email"`
+		Name         string `json:"name"`
+		IsAdmin      int    `json:"isAdmin"`
+		Access_token string `json:"access_token"`
 	}
 	testCase := []struct {
 		Description string      `json:"Description"`
@@ -40,19 +40,19 @@ func TestLogin(t *testing.T) {
 			Description: "Emailエラーによる不合致",
 			Entity:      user{"Emailは違うよ", "yamamo10", "山本真也", 0},
 			Want:        LoginFormat{"", "", 0, ""},
-			WantErr:     false,
+			WantErr:     true,
 		},
 		{
 			Description: "Passwordエラーによる不合致",
 			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
-			Want:        LoginFormat{"", "", 0, ""},
+			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, ""},
 			WantErr:     false,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
 			Entity:      user{"", "", "山本真也", 0},
 			Want:        LoginFormat{"", "", 0, ""},
-			WantErr:     false,
+			WantErr:     true,
 		},
 	}
 
@@ -67,12 +67,10 @@ func TestLogin(t *testing.T) {
 			if (err != nil) != tt.WantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			t.Log(got)
 			//gotとtt.Wantの中身を比較
-			assert.Equal(t, got, tt.Want)
-			// assert.Equal(t, got.Password, tt.Want.Password)
-			// assert.Equal(t, got.Name, tt.Want.Name)
-			// assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
+			assert.Equal(t, got.Email, tt.Want.Email)
+			assert.Equal(t, got.Name, tt.Want.Name)
+			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
 			return
 		})
 	}

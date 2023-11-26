@@ -17,10 +17,10 @@ type ILoginUsecase interface {
 }
 
 type LoginFormat struct {
-	email        string
-	name         string
-	isAdmin      int
-	access_token string
+	Email        string `json:"email"`
+	Name         string `json:"name"`
+	IsAdmin      int    `json:"isAdmin"`
+	Access_token string `json:"access_token"`
 }
 
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
@@ -30,9 +30,9 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	//出力の型を定義
 	logfo := LoginFormat{}
 
-	logfo.email = found.Email
-	logfo.name = found.Name
-	logfo.isAdmin = found.IsAdmin
+	logfo.Email = found.Email
+	logfo.Name = found.Name
+	logfo.IsAdmin = found.IsAdmin
 
 	if err != nil {
 		return logfo, err
@@ -49,7 +49,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	//JWTの作成
 	jwt_message, err := CreateToken(e.Email)
 	//出力の型を定義
-	logfo.access_token = jwt_message
+	logfo.Access_token = jwt_message
 
 	return logfo, err
 
