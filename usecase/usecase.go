@@ -5,43 +5,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/shinya0226/kensyu/entity"
 	"golang.org/x/crypto/bcrypt"
 )
-
-type loginUsecase struct {
-	repo entity.IUserRepository
-}
-
-func NewLoginUsecase(repo entity.IUserRepository) ILoginUsecase {
-	return &loginUsecase{repo: repo}
-}
-
-type ILoginUsecase interface {
-	Login(e entity.User) (string, error)
-}
-
-func (u *loginUsecase) Login(e entity.User) (string, error) {
-	//該当するユーザーを抽出（found）
-	found, err := u.repo.FindSingleRow(e.Email)
-
-	if err != nil {
-		return "", err
-	}
-	//DBのパスワードのハッシュ化
-	pass, err := HashPassword(e.Password)
-	if err != nil {
-		return "", err
-	}
-	//パスワードの比較
-	if ans := VerifyPassword(pass, found.Password); ans != nil {
-		return "", err
-	}
-	//JWTの作成
-	message, err := CreateToken(e.Email)
-	return message, err
-
-}
 
 // パスワードの暗号化（DBからパスワードを取り出す時に使用）
 func HashPassword(rawPassword string) (string, error) {
