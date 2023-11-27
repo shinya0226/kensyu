@@ -17,6 +17,6 @@ func TestLogin(t *testing.T) {
 
 	testMock := mock.NewMockILoginUsecase(ctrl)
 	var responseJSON handler.LoginFormat
-	testMock.EXPECT().POST("/login", "authorizationkey", &responseJSON).Return(http.StatusOK, nil)
+	testMock.EXPECT().Login().Return()("/login", "authorizationkey", &responseJSON).Return(http.StatusOK, nil)
 
 }
