@@ -28,7 +28,7 @@ func TestLogin(t *testing.T) {
 	//mockの設定
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
+	//responseが期待通りであるか確認
 	testMock := mock.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
