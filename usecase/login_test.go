@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// login_testの実行
 // EmailとPasswordの合致確認
 func TestLogin(t *testing.T) {
 	type user struct {

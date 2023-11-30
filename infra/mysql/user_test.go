@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// user_testの実行
 // Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
 	type user struct {

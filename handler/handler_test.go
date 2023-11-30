@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"github.com/shinya0226/kensyu/entity"
-	// mock "github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/golang/mock/gomock"
 )
 
+// handler_testの実行
 func TestLogin(t *testing.T) {
 	// Login()の入力
 	var userEntity = entity.User{
