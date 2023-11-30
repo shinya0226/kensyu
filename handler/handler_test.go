@@ -4,8 +4,9 @@ import (
 	"testing"
 
 	"github.com/shinya0226/kensyu/entity"
+	// mock "github.com/shinya0226/kensyu/handler"
+	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/usecase"
-	mock "github.com/shinya0226/kensyu/usecase/mock"
 
 	"github.com/golang/mock/gomock"
 )
@@ -29,7 +30,7 @@ func TestLogin(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	//responseが期待通りであるか確認
-	testMock := mock.NewMockILoginUsecase(ctrl)
+	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
 }

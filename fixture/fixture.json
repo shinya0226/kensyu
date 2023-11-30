@@ -1,8 +1,8 @@
 {
     "test_cases": [
         {"Email": "shinya.yamamoto6@persol-pt.co.jp", "Password": "yamamo10", "WantErr": false},
-		{"Email": "shinya.yamamoto6@persol-pt.co.", "Password": "yamamo10", "WantErr": true},
-        {"Email": "shinya.yamamoto6@persol-pt.co.jp", "Password": "yamamo", "WantErr": false},
-        {"Email": "shinya.yamamoto6@persol-pt.co.", "Password": "yamamo", "WantErr": true}
+		{"Email": "Emailは違います", "Password": "yamamo10", "WantErr": true},
+        {"Email": "shinya.yamamoto6@persol-pt.co.jp", "Password": "Passwordは違います", "WantErr": false},
+        {"Email": "", "Password": "", "WantErr": true}
     ]
 }
