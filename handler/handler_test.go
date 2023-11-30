@@ -13,24 +13,26 @@ import (
 
 func TestLogin(t *testing.T) {
 	// Login()の入力
-	var userEntity = &entity.User{
+	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
 		Password: "yamamo10",
 		Name:     "山本真也",
 		IsAdmin:  0}
 
 	// Login()の出力
-	var userResponse = &usecase.LoginFormat{
+	var userResponse = usecase.LoginFormat{
 		Email:        "shinya.yamamoto6@persol-pt.co.jp",
 		Name:         "山本真也",
 		IsAdmin:      0,
 		Access_token: "Anything"}
 
-	//mockの設定
+	//controllerの生成
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	//responseが期待通りであるか確認
+	//mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+	//mockの呼び出し
+	testMock.Login(userEntity)
 
 }
