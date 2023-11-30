@@ -11,15 +11,15 @@ import (
 // Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
 	type user struct {
-		Email    string `json:"Email"`
-		Password string `json:"Password"`
-		Name     string `json:"Name"`
-		IsAdmin  int    `json:"IsAdmin"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Name     string `json:"name"`
+		IsAdmin  int    `json:"isAdmin"`
 	}
 	testCase := []struct {
-		Description string `json:"Description"`
-		Email       string `json:"Email"`
-		Password    string `json:"Password"`
+		Description string `json:"description"`
+		Email       string `json:"email"`
+		Password    string `json:"password"`
 		Want        user
 		WantErr     bool //エラーが出るときはtrue
 	}{

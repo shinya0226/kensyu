@@ -13,10 +13,10 @@ import (
 // EmailとPasswordの合致確認
 func TestLogin(t *testing.T) {
 	type user struct {
-		Email    string `json:"Email"`
-		Password string `json:"Password"`
-		Name     string `json:"Name"`
-		IsAdmin  int    `json:"IsAdmin"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Name     string `json:"name"`
+		IsAdmin  int    `json:"isAdmin"`
 	}
 	type LoginFormat struct {
 		Email        string `json:"email"`
@@ -25,8 +25,8 @@ func TestLogin(t *testing.T) {
 		Access_token string `json:"access_token"`
 	}
 	testCase := []struct {
-		Description string      `json:"Description"`
-		Entity      user        `json:"Email"` //入力
+		Description string      `json:"description"`
+		Entity      user        `json:"email"` //入力
 		Want        LoginFormat //出力
 		WantErr     bool        //エラーが出るときはtrue
 	}{

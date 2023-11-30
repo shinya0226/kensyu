@@ -24,7 +24,7 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 
 type LoginFormat struct {
 	Email        string `json:"email"`
-	Name         string `json:"Name"`
+	Name         string `json:"name"`
 	IsAdmin      int    `json:"isAdmin"`
 	Access_token string `json:"access_token"`
 }

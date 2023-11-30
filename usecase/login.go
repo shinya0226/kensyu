@@ -28,7 +28,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	found, err := u.repo.FindSingleRow(e.Email)
 
 	//出力の型を定義
-	logfo := LoginFormat{}
+	var logfo LoginFormat
 
 	logfo.Email = found.Email
 	logfo.Name = found.Name
