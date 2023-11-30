@@ -37,14 +37,15 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
+	//Loginの出力をmessageに格納
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
 	}
 	//formatに追加
-	logfo.Email = eu.Email
-	logfo.Name = eu.Name
-	logfo.IsAdmin = eu.IsAdmin
+	logfo.Email = message.Email
+	logfo.Name = message.Name
+	logfo.IsAdmin = message.IsAdmin
 	logfo.Access_token = message.Access_token
 
 	return c.JSON(http.StatusOK, logfo) //structに詰める

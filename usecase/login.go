@@ -44,6 +44,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	}
 	//パスワードの比較
 	if ans := VerifyPassword(pass, found.Password); ans != nil {
+		logfo.Name = ""
 		return logfo, err
 	}
 	//JWTの作成
