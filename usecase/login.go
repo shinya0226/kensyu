@@ -4,6 +4,7 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 )
 
+// ログイン処理
 type loginUsecase struct {
 	repo entity.IUserRepository
 }

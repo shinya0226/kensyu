@@ -1,5 +1,6 @@
 package entity
 
+// ログイン処理
 type User struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

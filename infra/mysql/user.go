@@ -6,6 +6,7 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 )
 
+// ログイン処理
 type userRepository struct {
 	db *sql.DB
 }

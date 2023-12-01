@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/shinya0226/kensyu/entity"
+	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -38,15 +39,36 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//Loginの出力をmessageに格納
-	message, err := u.Login(*eu)
+	response, err := u.Login(*eu)
 	if err != nil {
 		return err
 	}
 	//formatに追加
-	logfo.Email = message.Email
-	logfo.Name = message.Name
-	logfo.IsAdmin = message.IsAdmin
-	logfo.Access_token = message.Access_token
+	logfo.Email = response.Email
+	logfo.Name = response.Name
+	logfo.IsAdmin = response.IsAdmin
+	logfo.Access_token = response.Access_token
 
 	return c.JSON(http.StatusOK, logfo) //structに詰める
+}
+
+// アカウント一覧取得
+func GetAccounts() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		db := mysql.ConnectionDB()
+		post := entity.User{}
+		posts := []*entity.User{}
+
+		rows, err := db.Query("select * from user")
+		if err != nil {
+			return err
+		}
+		for rows.Next() {
+			if err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin); err != nil {
+				return err
+			}
+			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
+		}
+		return c.JSON(http.StatusOK, posts)
+	}
 }

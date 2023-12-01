@@ -21,10 +21,12 @@ func main() {
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
-	// ルートを設定
+	// 初期画面
 	e.GET("/", handler.Hello)
-
+	//ログイン処理
 	e.POST("/login", handler.Login(loginUsecase))
+	//アカウント一覧取得処理
+	e.GET("/accounts", handler.GetAccounts())
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
