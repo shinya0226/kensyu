@@ -32,6 +32,8 @@ func TestLogin(t *testing.T) {
 	//mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+	//handler.Loginのテスト
+	handler.Login(handler.NewMockILoginUsecase(ctrl))
 	//mockの呼び出し
 	testMock.Login(userEntity)
 

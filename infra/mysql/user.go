@@ -16,7 +16,6 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
-	// todo 以下でSQL インジェクションが発生しうるかを調査してください
 	if err := ur.db.QueryRow("SELECT * FROM user WHERE Email = ?", email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//Emailが合致しないとき
