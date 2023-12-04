@@ -26,7 +26,7 @@ func main() {
 	//ログイン処理
 	e.POST("/login", handler.Login(loginUsecase))
 	//アカウント一覧取得処理
-	e.GET("/accounts", handler.GetAccounts())
+	e.GET("/accounts/:page", handler.GetAccounts())
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
