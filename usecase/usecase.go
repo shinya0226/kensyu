@@ -30,9 +30,9 @@ func CreateToken(email string) (string, error) {
 		"exp":  time.Now().Add(time.Hour * 1).Unix(), //1時間の有効期限を設定
 	}
 	//署名
-	JWT_SECRET := os.Getenv("JWT_SECRET")
-	var secretKey = JWT_SECRET
-	tokenString, err := token.SignedString([]byte(secretKey))
+	// JWT_SECRET := os.Getenv("JWT_SECRET")
+	// var secretKey = JWT_SECRET
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		return "", err
 
@@ -44,7 +44,7 @@ func CreateToken(email string) (string, error) {
 // JWTの検証
 func VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+		return []byte(os.Getenv(os.Getenv("JWT_SECRET"))), nil
 	})
 	if err != nil {
 		return token, err

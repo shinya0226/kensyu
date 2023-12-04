@@ -1,7 +1,11 @@
 package handler
 
 import (
+	"database/sql"
+	"log"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
@@ -30,10 +34,12 @@ type LoginFormat struct {
 	Access_token string `json:"access_token"`
 }
 
+var logfo LoginFormat
+
 // ログイン処理（詳細）
 func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
-	logfo := LoginFormat{}
+	// logfo := LoginFormat{}
 
 	if err := c.Bind(eu); err != nil {
 		return err
@@ -56,10 +62,23 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
+		//JWT認証
+		_, err := usecase.VerifyToken(logfo.Access_token)
+		if err != nil {
+			return err
+		}
 		post := entity.User{}
 		posts := []*entity.User{}
+		//request page
+		page := c.Param("page")
+		//int型に変換
+		var i int
+		i, _ = strconv.Atoi(page)
+		//読み込み開始のページの定義
+		var page_first int
+		page_first = (i - 1) * 5
 
-		rows, err := db.Query("select * from user")
+		rows, err := db.Query("select * from user LIMIT ?,5", page_first)
 		if err != nil {
 			return err
 		}
@@ -70,5 +89,19 @@ func GetAccounts() echo.HandlerFunc {
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
 		}
 		return c.JSON(http.StatusOK, posts)
+	}
+}
+
+// JWT認証
+func WhoAmI(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//headerから呼び出し
+		tokenString := r.Header.Get("Authorization")
+		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+		//tokenの認証
+		_, err := usecase.VerifyToken(tokenString)
+		if err != nil {
+			log.Fatal("token error")
+		}
 	}
 }
