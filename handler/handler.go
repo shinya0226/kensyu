@@ -38,7 +38,7 @@ type LoginFormat struct {
 type jwtCustomClaims struct {
 	Name  string `json:"name"`
 	Admin bool   `json:"admin"`
-	jwt.RegisteredClaims
+	// jwt.RegisteredClaims
 }
 
 var logfo LoginFormat
@@ -144,6 +144,7 @@ func Restricted() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(jwt.MapClaims)
+		// claims := user.Claims.(jwt.MapClaims)
 		name := claims["name"].(string)
 		return c.String(http.StatusOK, "Welcome "+name+"!")
 	}
