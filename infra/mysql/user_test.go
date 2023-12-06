@@ -1,14 +1,29 @@
 package mysql_test
 
 import (
+	"log"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	. "github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/testfixtures.v1"
 )
 
-// user_testの実行
+// fixtureのファイルパス
+const FixturesPath = "../../testdata/fixtures"
+
+// DBの設定
+func prepareTestDatabse() {
+	db := ConnectionDB()
+	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
 // Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
 	type user struct {
@@ -57,6 +72,9 @@ func TestFindSingleRow(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
+			//fixtureの設定
+			prepareTestDatabse()
+
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 
