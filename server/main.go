@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os"
+
+	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
@@ -26,7 +29,10 @@ func main() {
 	//ログイン処理
 	e.POST("/login", handler.Login(loginUsecase))
 	//アカウント一覧取得処理
-	e.GET("/accounts/:page", handler.GetAccounts())
+	// e.POST("/accounts/:page", handler.GetAccounts())
+	r := e.Group("/restricted")
+	r.Use(echojwt.JWT([]byte(os.Getenv("JWT_SECRET"))))
+	r.POST("", handler.Restricted())
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
