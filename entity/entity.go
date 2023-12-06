@@ -1,10 +1,10 @@
 package entity
 
 type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	IsAdmin  int    `json:"isAdmin"`
+	Email    string `json:"Email"`
+	Password string `json:"Password"`
+	Name     string `json:"Name"`
+	IsAdmin  int    `json:"IsAdmin"`
 }
 
 type IUserRepository interface {
