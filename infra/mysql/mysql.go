@@ -13,7 +13,7 @@ import (
 // DBに接続
 func ConnectionDB() *sql.DB {
 	//環境設定ファイルの読み込み
-	err := godotenv.Load("/Users/398755_black/Documents/src/kensyu/.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		fmt.Printf("読み込み失敗: %v", err)
 	}

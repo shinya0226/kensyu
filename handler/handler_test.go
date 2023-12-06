@@ -1,22 +1,40 @@
 package handler_test
 
 import (
-	"net/http"
 	"testing"
 
-	mock "github.com/shinya0226/kensyu/usecase/mock"
+	"github.com/shinya0226/kensyu/entity"
+	"github.com/shinya0226/kensyu/handler"
+	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/golang/mock/gomock"
-	"github.com/shinya0226/kensyu/handler"
 )
 
+// handler_testの実行
 func TestLogin(t *testing.T) {
-	//設定
+	// Login()の入力
+	var userEntity = entity.User{
+		Email:    "shinya.yamamoto6@persol-pt.co.jp",
+		Password: "yamamo10",
+		Name:     "山本真也",
+		IsAdmin:  0}
+
+	// Login()の出力
+	var userResponse = usecase.LoginFormat{
+		Email:        "shinya.yamamoto6@persol-pt.co.jp",
+		Name:         "山本真也",
+		IsAdmin:      0,
+		Access_token: "Anything"}
+
+	//controllerの生成
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	testMock := mock.NewMockILoginUsecase(ctrl)
-	var responseJSON handler.LoginFormat
-	testMock.EXPECT().POST("/login", "authorizationkey", &responseJSON).Return(http.StatusOK, nil)
+	//mockの生成
+	testMock := handler.NewMockILoginUsecase(ctrl)
+	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+	//handler.Loginのテスト
+	handler.Login(handler.NewMockILoginUsecase(ctrl))
+	//mockの呼び出し
+	testMock.Login(userEntity)
 
 }
