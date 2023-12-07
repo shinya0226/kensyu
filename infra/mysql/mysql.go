@@ -6,18 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 // DBに接続
 func ConnectionDB() *sql.DB {
-	//環境設定ファイルの読み込み
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		fmt.Printf("読み込み失敗: %v", err)
-	}
-	//環境変数の設定
+	// //環境変数の設定
 	DBUser := os.Getenv("DB_USER")
 	DBPass := os.Getenv("DB_PASS")
 	DBHost := os.Getenv("DB_HOST")
