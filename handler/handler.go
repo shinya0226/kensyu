@@ -31,12 +31,6 @@ type LoginFormat struct {
 	Access_token string `json:"access_token"`
 }
 
-type jwtCustomClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
-	// jwt.RegisteredClaims
-}
-
 var logfo LoginFormat
 
 // ログイン処理（詳細）
