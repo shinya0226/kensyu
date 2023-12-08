@@ -66,6 +66,12 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
+		//JWT認証
+		user := c.Get("user").(*jwt.Token)
+		_, err := usecase.VerifyToken(user.Raw)
+		if err != nil {
+			return err
+		}
 
 		post := entity.User{}
 		posts := []*entity.User{}
@@ -90,18 +96,4 @@ func GetAccounts() echo.HandlerFunc {
 		}
 		return c.JSON(http.StatusOK, posts)
 	}
-}
-
-func Restricted() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user := c.Get("user").(*jwt.Token)
-		claims := user.Claims.(jwt.MapClaims)
-		// claims := user.Claims.(jwt.MapClaims)
-		name := claims["name"].(string)
-		return c.String(http.StatusOK, "Welcome "+name+"!")
-	}
-}
-
-func accessible(c echo.Context) error {
-	return c.String(http.StatusOK, "Accessible")
 }
