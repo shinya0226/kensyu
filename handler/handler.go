@@ -1,10 +1,7 @@
 package handler
 
 import (
-	"errors"
-	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/golang-jwt/jwt"
@@ -65,42 +62,11 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	return c.JSON(http.StatusOK, logfo) //structに詰める
 }
 
-func checkToken(headers map[string]string) error {
-	tokenString, headerIsNotNull := headers["Authorization"]
-	if !headerIsNotNull {
-		return errors.New("[Header]Authorization is not specified")
-	}
-
-	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		b := []byte(os.Getenv("JWT_SECRET"))
-		return b, nil
-	})
-	if err != nil {
-		log.Println(err)
-		return errors.New("jwt.Parse() returned error")
-	}
-
-	return nil
-}
-
 // アカウント一覧取得
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
-		// WhoAmI(db)
-		// tokenString, err := c.Cookie("token")
-		// checkToken(tokenString)
 
-		// _, err = usecase.ParseToken(tokenString.String())
-
-		// usecase.VerifyToken(token)
-
-		// checkToken(r.Header.)
-		//JWT認証
-		// _, err := usecase.VerifyToken()
-		// if err != nil {
-		// 	return err
-		// }
 		post := entity.User{}
 		posts := []*entity.User{}
 		//request page
@@ -126,20 +92,6 @@ func GetAccounts() echo.HandlerFunc {
 	}
 }
 
-// // JWT認証
-//
-//	func WhoAmI(db *sql.DB) http.HandlerFunc {
-//		return func(w http.ResponseWriter, r *http.Request) {
-//			//headerから呼び出し
-//			tokenString := r.Header.Get("Authorization")
-//			tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-//			//tokenの認証
-//			_, err := usecase.VerifyToken(tokenString)
-//			if err != nil {
-//				log.Fatal("token error")
-//			}
-//		}
-//	}
 func Restricted() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
