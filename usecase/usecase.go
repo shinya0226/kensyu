@@ -30,9 +30,7 @@ func CreateToken(email string) (string, error) {
 		"exp":  time.Now().Add(time.Hour * 1).Unix(), //1時間の有効期限を設定
 	}
 	//署名
-	JWT_SECRET := os.Getenv("JWT_SECRET")
-	var secretKey = JWT_SECRET
-	tokenString, err := token.SignedString([]byte(secretKey))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		return "", err
 

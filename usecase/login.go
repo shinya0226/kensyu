@@ -29,22 +29,25 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 
 	//出力の型を定義
 	logfo := LoginFormat{}
-
-	logfo.Email = found.Email
-	logfo.Name = found.Name
-	logfo.IsAdmin = found.IsAdmin
-
+	//Emailの合致確認
 	if err != nil {
 		return logfo, err
 	}
-	if e.Password != found.Password {
+	logfo.Email = found.Email
+
+	//Passwordの合致確認
+	err = VerifyPassword(found.Password, e.Password)
+	if err != nil {
 		return logfo, err
 	}
+	logfo.Name = found.Name
+	logfo.IsAdmin = found.IsAdmin
+
 	//JWTの作成
 	jwt_message, err := CreateToken(e.Email)
 	//出力の型を定義
 	logfo.Access_token = jwt_message
 
-	return logfo, err
+	return logfo, nil
 
 }
