@@ -37,13 +37,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	if err != nil {
 		return logfo, err
 	}
-	//DBのパスワードのハッシュ化
-	pass, err := HashPassword(e.Password)
-	if err != nil {
-		return logfo, err
-	}
-	//パスワードの比較
-	if ans := VerifyPassword(pass, found.Password); ans != nil {
+	if e.Password != found.Password {
 		return logfo, err
 	}
 	//JWTの作成
