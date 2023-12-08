@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -21,31 +20,21 @@ func VerifyPassword(hashedPassword string, entryPassword string) error {
 	return err
 }
 
-type jwtCustomClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
-	jwt.RegisteredClaims
-}
-
 // JWTの発行
 func CreateToken(email string) (string, error) {
 	//tokenの作成
 	token := jwt.New(jwt.GetSigningMethod("HS256"))
 	//Claimsの設定
 	token.Claims = &jwt.MapClaims{
-		"name": email,
 		"user": email,
 		"exp":  time.Now().Add(time.Hour * 1).Unix(), //1時間の有効期限を設定
 	}
-
 	//署名
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		return "", err
-
 	}
 	return tokenString, err
-
 }
 
 // JWTの検証
@@ -57,17 +46,4 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 		return token, err
 	}
 	return token, err
-}
-
-func ParseToken(tokenString string) (*jwt.Token, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
 }

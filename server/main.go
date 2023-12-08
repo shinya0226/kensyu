@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -33,7 +32,6 @@ func main() {
 	e.GET("/", handler.Hello)
 
 	//アカウント一覧取得処理
-	// e.POST("/accounts/:page", handler.GetAccounts())
 	r := e.Group("/restricted")
 
 	config := echojwt.Config{
@@ -43,19 +41,19 @@ func main() {
 		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
 	r.Use(echojwt.WithConfig(config))
-	// r.GET("", restricted)
-	r.GET("/accounts/:page", handler.GetAccounts())
+	//JWT認証
+	r.GET("", restricted)                           //http://localhost:8080/restricted
+	r.GET("/accounts/:page", handler.GetAccounts()) // http://localhost:8080/restricted/accounts/1
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
 
 }
 
+// JWT認証
 func restricted(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	token, _ := usecase.VerifyToken(user.Raw)
-	fmt.Println(token)
-	// claims := user.Claims.(*jwt.MapClaims)
-	// name:=claims
-	return c.String(http.StatusOK, "ok")
+	user := c.Get("user").(*jwt.Token) //token
+	usecase.VerifyToken(user.Raw)
+
+	return c.String(http.StatusOK, "JWT認証OK")
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/golang-jwt/jwt"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
@@ -66,12 +65,6 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
-		//JWT認証
-		user := c.Get("user").(*jwt.Token)
-		_, err := usecase.VerifyToken(user.Raw)
-		if err != nil {
-			return err
-		}
 
 		post := entity.User{}
 		posts := []*entity.User{}
