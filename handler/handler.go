@@ -104,12 +104,37 @@ func CreateAccount() echo.HandlerFunc {
 			return err
 		}
 		res, err := ins.Exec(eu.Email, pass, eu.Name, eu.IsAdmin)
+		if err != nil || res == nil {
+			return err
+		}
+		return c.String(http.StatusCreated, "作成完了")
+	}
+}
+
+type DeleteFormat struct {
+	Email string `json:"email"`
+}
+
+var delefo DeleteFormat
+
+// アカウント削除
+func DeleteAccount() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		db := mysql.ConnectionDB()
+		df := new(DeleteFormat)
+		if err := c.Bind(df); err != nil {
+			return err
+		}
+
+		del, err := db.Prepare("DELETE FROM user WHERE Email = ?")
 		if err != nil {
 			return err
 		}
-		if res == nil {
+		res, err := del.Exec(df.Email)
+		if err != nil || res == nil {
 			return err
 		}
-		return c.JSON(http.StatusCreated, eu)
+		return c.String(http.StatusOK, "削除完了")
+
 	}
 }
