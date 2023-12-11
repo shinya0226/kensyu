@@ -40,8 +40,6 @@ var logfo LoginFormat
 // ログイン処理（詳細）
 func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
-	// logfo := LoginFormat{}
-
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
@@ -60,7 +58,7 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 }
 
 // アカウント一覧取得
-func GetAccounts() echo.HandlerFunc {
+func FetchAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
 
@@ -86,5 +84,32 @@ func GetAccounts() echo.HandlerFunc {
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
 		}
 		return c.JSON(http.StatusOK, posts)
+	}
+}
+
+// アカウント作成
+func CreateAccount() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		eu := new(entity.User)
+		if err := c.Bind(eu); err != nil {
+			return err
+		}
+		db := mysql.ConnectionDB()
+		ins, err := db.Prepare("INSERT INTO user VALUES(?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		pass, err := usecase.HashPassword(eu.Password)
+		if err != nil {
+			return err
+		}
+		res, err := ins.Exec(eu.Email, pass, eu.Name, eu.IsAdmin)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			return err
+		}
+		return c.JSON(http.StatusCreated, eu)
 	}
 }

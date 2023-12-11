@@ -41,10 +41,12 @@ func main() {
 		},
 		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
+	//認証
 	r.Use(echojwt.WithConfig(config))
-	//JWT認証
-	r.GET("", restricted)                           //http://localhost:8080/restricted
-	r.GET("/accounts/:page", handler.GetAccounts()) // http://localhost:8080/restricted/accounts/1
+
+	r.GET("", restricted)                             //http://localhost:8080/restricted
+	r.GET("/accounts/:page", handler.FetchAccounts()) // http://localhost:8080/restricted/accounts/1
+	r.POST("/account/new", handler.CreateAccount())   // http://localhost:8080/restricted/account/new
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
