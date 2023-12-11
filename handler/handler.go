@@ -115,8 +115,6 @@ type DeleteFormat struct {
 	Email string `json:"email"`
 }
 
-var delefo DeleteFormat
-
 // アカウント削除
 func DeleteAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -136,5 +134,35 @@ func DeleteAccount() echo.HandlerFunc {
 		}
 		return c.String(http.StatusOK, "削除完了")
 
+	}
+}
+
+type UpdateFormat struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	IsAdmin  int    `json:"isAdmin"`
+}
+
+// アカウント更新
+func UpdateAccount() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		db := mysql.ConnectionDB()
+		ua := new(UpdateFormat)
+		if err := c.Bind(ua); err != nil {
+			return err
+		}
+		pass, err := usecase.HashPassword(ua.Password)
+		if err != nil {
+			return err
+		}
+		upd, err := db.Prepare("UPDATE user SET Password = ?, IsAdmin = ? WHERE Email = ?")
+		if err != nil {
+			return err
+		}
+		res, err := upd.Exec(pass, ua.IsAdmin, ua.Email)
+		if err != nil || res == nil {
+			return err
+		}
+		return c.String(http.StatusOK, "更新完了")
 	}
 }

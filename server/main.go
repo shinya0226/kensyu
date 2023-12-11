@@ -48,6 +48,7 @@ func main() {
 	r.GET("/accounts/:page", handler.FetchAccounts())    // http://localhost:8080/restricted/accounts/1
 	r.POST("/account/create", handler.CreateAccount())   // http://localhost:8080/restricted/account/create
 	r.DELETE("/account/delete", handler.DeleteAccount()) // http://localhost:8080/restricted/account/delete
+	r.PUT("/account/update", handler.UpdateAccount())    // http://localhost:8080/restricted/account/update
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
