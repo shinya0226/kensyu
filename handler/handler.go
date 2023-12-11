@@ -6,7 +6,7 @@ import (
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
-	"github.com/shinya0226/kensyu/usecase"
+	usecase "github.com/shinya0226/kensyu/usecase"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -15,6 +15,10 @@ import (
 // 初期画面の表示
 func Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "お仕事おつかれ様")
+}
+
+type AdminFormat struct {
+	IsAdmin int `json:"isAdmin"`
 }
 
 // ログイン処理（機能）
