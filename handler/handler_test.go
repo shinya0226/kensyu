@@ -21,10 +21,10 @@ func TestLogin(t *testing.T) {
 
 	// Login()の出力
 	var userResponse = usecase.LoginFormat{
-		Email:        "shinya.yamamoto6@persol-pt.co.jp",
-		Name:         "山本真也",
-		IsAdmin:      0,
-		Access_token: "Anything"}
+		Email:       "shinya.yamamoto6@persol-pt.co.jp",
+		Name:        "山本真也",
+		IsAdmin:     0,
+		AccessToken: "Anything"}
 
 	//　controllerの生成
 	ctrl := gomock.NewController(t)

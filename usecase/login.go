@@ -45,6 +45,9 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 
 	//　JWTの作成
 	jwtMessage, err := CreateToken(e.Email)
+	if err != nil {
+		return logfo, err
+	}
 	//　出力の型を定義
 	logfo.AccessToken = jwtMessage
 
