@@ -24,18 +24,18 @@ type LoginFormat struct {
 }
 
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
-	//該当するユーザーを抽出（found）
+	//　該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
 
-	//出力の型を定義
+	//　出力の型を定義
 	logfo := LoginFormat{}
-	//Emailの合致確認
+	//　Emailの合致確認
 	if err != nil {
 		return logfo, err
 	}
 	logfo.Email = found.Email
 
-	//Passwordの合致確認
+	//　Passwordの合致確認
 	err = VerifyPassword(found.Password, e.Password)
 	if err != nil {
 		return logfo, err
@@ -43,9 +43,9 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	logfo.Name = found.Name
 	logfo.IsAdmin = found.IsAdmin
 
-	//JWTの作成
+	//　JWTの作成
 	jwt_message, err := CreateToken(e.Email)
-	//出力の型を定義
+	//　出力の型を定義
 	logfo.Access_token = jwt_message
 
 	return logfo, nil

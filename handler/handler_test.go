@@ -26,14 +26,13 @@ func TestLogin(t *testing.T) {
 		IsAdmin:      0,
 		Access_token: "Anything"}
 
-	//controllerの生成
+	//　controllerの生成
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	//mockの生成
+	//　mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-	//handler.Loginのテスト
+	//　handler.Loginのテスト
 	handler.Login(testMock)
 	testMock.Login(userEntity)
-
 }
