@@ -56,7 +56,7 @@ jobs:
           GO111MODULE: "on"
           HOME: "/root"
           TZ: "Asia/Tokyo"
-      - image: cimg/mysql:5.7
+      - image: cimg/mysql:8.0
         environment:
           TZ: JST-9
           MYSQL_USER: atsuser
@@ -78,7 +78,7 @@ jobs:
       - run:
           name: "install tool"
           command: |
-            go install github.com/golang-migrate/migrate@v4.16.2
+            curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
       - run:
           name: "waiting mysql startup"
           command: dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 1m
@@ -92,7 +92,8 @@ jobs:
             mkdir -p ./out/gotest
             gotestsum --junitfile ./out/gotest/junit.xml \
               --format=dots -- \
-              -coverprofile=./out/coverage.out
+              -coverprofile=./out/coverage.out\
+              ./...
       - run:
           name: "coverage to html"
           command: go tool cover -html ./out/coverage.out -o ./out/coverage.html
@@ -107,6 +108,7 @@ jobs:
           path: out/gotest
 
 workflows:
+  version: 2
   build-and-test:
     jobs:
       - build
