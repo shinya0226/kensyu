@@ -73,7 +73,7 @@ jobs:
       - run:
           name: "setup base env"
           command: |
-            cat .circleci/.env >> $BASH_ENV
+            cat .circleci/.env.circleci >> $BASH_ENV
             source $BASH_ENV
       - run:
           name: "install tool"
