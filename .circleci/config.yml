@@ -56,7 +56,7 @@ jobs:
           GO111MODULE: "on"
           HOME: "/root"
           TZ: "Asia/Tokyo"
-      - image: circleci/mysql:5.6
+      - image: circleci/mysql:8.0
         environment:
           TZ: JST-9
           MYSQL_USER: atsuser
