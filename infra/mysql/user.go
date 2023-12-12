@@ -3,7 +3,6 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	"github.com/shinya0226/kensyu/entity"
 )
@@ -18,8 +17,7 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
-	dbTable := os.Getenv("DB_TABLE")
-	table := fmt.Sprintf("SELECT * FROM %s where Email = ?", dbTable)
+	table := fmt.Sprintf("SELECT * FROM user where Email = ?")
 	if err := ur.db.QueryRow(table, email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//　Emailが合致しないとき
