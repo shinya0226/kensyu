@@ -62,7 +62,7 @@ jobs:
           MYSQL_USER: atsuser
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
-          MYSQL_DATABASE: ats_testing
+          MYSQL_DATABASE: kensyu_testing
         command: [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
     steps:
       - attach_workspace:
@@ -79,14 +79,13 @@ jobs:
           name: "install tool"
           command: |
             curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
-            mv migrate /go/bin/
       - run:
           name: "waiting mysql startup"
           command: dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 1m
       - run:
           name: migrate
           command: |
-            migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
+            ./migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
       - run:
           name: "do test!"
           command: |
