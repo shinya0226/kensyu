@@ -37,12 +37,12 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
-	// Loginの出力をmessageに格納
+	//　Loginの出力をmessageに格納
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
 	}
-	//formatに追加
+	//　formatに追加
 	logfo.Email = message.Email
 	logfo.Name = message.Name
 	logfo.IsAdmin = message.IsAdmin
