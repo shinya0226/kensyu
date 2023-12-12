@@ -27,5 +27,4 @@ func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	}
 	//　Emailが合致するとき
 	return u, nil
-
 }
