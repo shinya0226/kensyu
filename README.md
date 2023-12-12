@@ -1,7 +1,7 @@
 # kensyu
 #test
 #環境構築手順として.env.exampleファイルをコピーして .envrc ファイルを生成すること。
-#fixtureにてテストを実行する際はusersテーブルを使用する。
+#fixtureにてテストを実行する際はfix_testデータベースにてusersテーブルを使用する。
 #.envrcに環境を構築し、direnv allowコマンドでロードをすること。
 #migrationのインストール手順
 1.brew install golang-migrate　このコマンドをCLIに入力
