@@ -20,16 +20,16 @@ func TestLogin(t *testing.T) {
 		IsAdmin  int    `json:"IsAdmin"`
 	}
 	type LoginFormat struct {
-		Email        string `json:"email"`
-		Name         string `json:"name"`
-		IsAdmin      int    `json:"isAdmin"`
-		Access_token string `json:"access_token"`
+		Email       string `json:"email"`
+		Name        string `json:"name"`
+		IsAdmin     int    `json:"isAdmin"`
+		AccessToken string `json:"access_token"`
 	}
 	testCase := []struct {
 		Description string      `json:"Description"`
-		Entity      user        `json:"Email"` //入力
-		Want        LoginFormat //出力
-		WantErr     bool        //エラーが出るときはtrue
+		Entity      user        `json:"Email"` //　入力
+		Want        LoginFormat //　出力
+		WantErr     bool        //　エラーが出るときはtrue
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
@@ -64,11 +64,11 @@ func TestLogin(t *testing.T) {
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
 			got, err := loginUsecase.Login(entity.User(tt.Entity))
 
-			//errがあるか判別（あるときはtrue,ないときはfalse）
+			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			//gotとtt.Wantの中身を比較
+			//　gotとtt.Wantの中身を比較
 			assert.Equal(t, got.Email, tt.Want.Email)
 			assert.Equal(t, got.Name, tt.Want.Name)
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
