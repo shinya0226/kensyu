@@ -6,7 +6,6 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/usecase"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 )
 
