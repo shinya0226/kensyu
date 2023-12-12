@@ -78,7 +78,7 @@ jobs:
       - run:
           name: "install tool"
           command: |
-            go install github.com/golang-migrate/migrate@v4.16.2
+            $ curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
       - run:
           name: "waiting mysql startup"
           command: dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 1m
