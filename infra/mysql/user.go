@@ -18,7 +18,7 @@ func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
 	// dbTable := os.Getenv("DB_TABLE")
 	// table := fmt.Sprintf("SELECT * FROM %s where Email = ?", dbTable)
-	const table = "SELECT * FROM users where Email = ?"
+	const table = "SELECT * FROM ${DB_TABLE} where Email = ?"
 	if err := ur.db.QueryRow(table, email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//　Emailが合致しないとき
