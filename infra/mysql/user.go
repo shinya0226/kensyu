@@ -19,7 +19,7 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
 	dbTable := os.Getenv("DB_TABLE")
-	table := fmt.Sprintf("SELECT * FROM %s WHERE Email = ?", dbTable)
+	table := fmt.Sprintf("select * from %s where Email = ?", dbTable)
 	if err := ur.db.QueryRow(table, email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//　Emailが合致しないとき
