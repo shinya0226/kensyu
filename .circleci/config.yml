@@ -92,7 +92,8 @@ jobs:
             mkdir -p ./out/gotest
             gotestsum --junitfile ./out/gotest/junit.xml \
               --format=dots -- \
-              -coverprofile=./out/coverage.out
+              -coverprofile=./out/coverage.out \
+              ./...
       - run:
           name: "coverage to html"
           command: go tool cover -html ./out/coverage.out -o ./out/coverage.html
