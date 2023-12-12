@@ -2,7 +2,7 @@ version: 2.1
 defaults: &defaults
   working_directory: /go/src/github.com/shinya0226/kensyu/
   docker:
-    - image: cimg/golang:1.18
+    - image: cimg/go:1.18
       user: root
       environment:
         GO111MODULE: "on"
@@ -50,7 +50,7 @@ jobs:
   test:
     working_directory: /go/src/github.com/shinya0226/kensyu/
     docker:
-      - image: cimg/golang:1.18
+      - image: cimg/go:1.18
         user: root
         environment:
           GO111MODULE: "on"
