@@ -48,5 +48,5 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	logfo.IsAdmin = message.IsAdmin
 	logfo.Access_token = message.Access_token
 
-	return c.JSON(http.StatusOK, logfo) //structに詰める
+	return c.JSON(http.StatusOK, logfo) //　structに詰める
 }
