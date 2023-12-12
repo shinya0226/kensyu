@@ -24,8 +24,8 @@ func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//　Emailが合致しないとき
 		return u, err
-	} else {
-		//　Emailが合致するとき
-		return u, nil
 	}
+	//　Emailが合致するとき
+	return u, nil
+
 }
