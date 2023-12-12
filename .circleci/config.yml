@@ -2,7 +2,7 @@ version: 2.1
 defaults: &defaults
   working_directory: /go/src/github.com/shinya0226/kensyu/
   docker:
-    - image: cimg/go:1.21.5
+    - image: cimg/go:1.18
       user: root
       environment:
         GO111MODULE: "on"
@@ -50,7 +50,7 @@ jobs:
   test:
     working_directory: /go/src/github.com/shinya0226/kensyu/
     docker:
-      - image: cimg/go:1.21.5
+      - image: cimg/go:1.18
         user: root
         environment:
           GO111MODULE: "on"
@@ -62,7 +62,7 @@ jobs:
           MYSQL_USER: atsuser
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
-          MYSQL_DATABASE: ats_testing
+          MYSQL_DATABASE: kensyu_testing
         command: [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
     steps:
       - attach_workspace:
@@ -73,26 +73,27 @@ jobs:
       - run:
           name: "setup base env"
           command: |
-            cat .circleci/.env >> $BASH_ENV
+            cat .circleci/.env.circleci >> $BASH_ENV
             source $BASH_ENV
       - run:
           name: "install tool"
           command: |
-            go install github.com/golang-migrate/migrate@v4.16.2
+            curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
       - run:
           name: "waiting mysql startup"
           command: dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 1m
       - run:
           name: migrate
           command: |
-            migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
+            ./migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
       - run:
-          name: do test
+          name: "do test!"
           command: |
             mkdir -p ./out/gotest
             gotestsum --junitfile ./out/gotest/junit.xml \
               --format=dots -- \
-              -coverprofile=./out/coverage.out
+              -coverprofile=./out/coverage.out \
+              ./...
       - run:
           name: "coverage to html"
           command: go tool cover -html ./out/coverage.out -o ./out/coverage.html
@@ -107,6 +108,7 @@ jobs:
           path: out/gotest
 
 workflows:
+  version: 2
   build-and-test:
     jobs:
       - build
