@@ -37,7 +37,7 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
-	//　Loginの出力をmessageに格納
+	//　Loginの出力をmessageに格納（修正）
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
