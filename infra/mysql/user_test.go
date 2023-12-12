@@ -86,7 +86,6 @@ func TestFindSingleRow(t *testing.T) {
 			assert.Equal(t, got.Password, tt.Want.Password)
 			assert.Equal(t, got.Name, tt.Want.Name)
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
-			return
 		})
 	}
 }

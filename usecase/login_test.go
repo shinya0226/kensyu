@@ -72,7 +72,6 @@ func TestLogin(t *testing.T) {
 			assert.Equal(t, got.Email, tt.Want.Email)
 			assert.Equal(t, got.Name, tt.Want.Name)
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
-			return
 		})
 	}
 }
