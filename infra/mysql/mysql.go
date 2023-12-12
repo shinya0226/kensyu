@@ -10,7 +10,7 @@ import (
 
 // DBに接続
 func ConnectionDB() *sql.DB {
-	// //環境変数の設定
+	//環境変数の設定
 	DBUser := os.Getenv("DB_USER")
 	DBPass := os.Getenv("DB_PASS")
 	DBHost := os.Getenv("DB_HOST")

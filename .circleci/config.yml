@@ -2,7 +2,7 @@ version: 2.1
 defaults: &defaults
   working_directory: /go/src/github.com/shinya0226/kensyu/
   docker:
-    - image: cimg/go:1.21.5
+    - image: cimg/go:1.18
       user: root
       environment:
         GO111MODULE: "on"
@@ -50,13 +50,13 @@ jobs:
   test:
     working_directory: /go/src/github.com/shinya0226/kensyu/
     docker:
-      - image: cimg/go:1.21.5
+      - image: cimg/go:1.18
         user: root
         environment:
           GO111MODULE: "on"
           HOME: "/root"
           TZ: "Asia/Tokyo"
-      - image: cimg/mysql:8.0
+      - image: cimg/mysql:5.7
         environment:
           TZ: JST-9
           MYSQL_USER: atsuser
