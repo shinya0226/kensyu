@@ -68,9 +68,11 @@ func TestFindSingleRow(t *testing.T) {
 		},
 	}
 
+	//　DB接続
+	db := ConnectionDB()
+	db.Close()
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			db := ConnectionDB()
 			//　fixtureの設定
 			prepareTestDatabse()
 
