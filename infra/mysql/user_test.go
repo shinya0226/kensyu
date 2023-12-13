@@ -71,10 +71,9 @@ func TestFindSingleRow(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
-			db.Close()
 			//　fixtureの設定
 			prepareTestDatabse()
-
+			db.Close()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 
