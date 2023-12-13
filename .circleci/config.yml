@@ -56,7 +56,7 @@ jobs:
           GO111MODULE: "on"
           HOME: "/root"
           TZ: "Asia/Tokyo"
-      - image: cimg/mysql:5.7
+      - image: cimg/mysql:8.0.33  #　mysql
         environment:
           TZ: JST-9
           MYSQL_USER: atsuser
