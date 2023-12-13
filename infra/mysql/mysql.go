@@ -17,7 +17,7 @@ func ConnectionDB() *sql.DB {
 	//　DB読み込み
 	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPass, dbHost, dbPort, dbName)
 	// db, err := sql.Open("mysql", dsn)
-	db, err := sql.Open("mysql", "root:Shinya0023@tcp(127.0.0.1:3306)/yamamoto?parseTime=true")
+	db, err := sql.Open("mysql", "atsuser:atspass@tcp(127.0.0.1:3306)/kensyu_testing?parseTime=true")
 
 	if err != nil {
 		log.Fatal(err)
