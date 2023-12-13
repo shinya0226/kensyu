@@ -62,7 +62,7 @@ jobs:
           MYSQL_USER: atsuser
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
-          MYSQL_DATABASE: ats_testing
+          MYSQL_DATABASE: kensyu_testing
         command: [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
     steps:
       - attach_workspace:
@@ -85,14 +85,14 @@ jobs:
       - run:
           name: migrate
           command: |
-            migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
+            ./migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
       - run:
-          name: do test
+          name: "do test"
           command: |
             mkdir -p ./out/gotest
             gotestsum --junitfile ./out/gotest/junit.xml \
               --format=dots -- \
-              -coverprofile=./out/coverage.out\
+              -coverprofile=./out/coverage.out \
               ./...
       - run:
           name: "coverage to html"
