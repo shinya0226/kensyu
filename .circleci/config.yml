@@ -7,7 +7,7 @@ defaults: &defaults
       environment:
         GO111MODULE: "on"
         HOME: "/root"
-        TZ: "Asia/Tokyo"
+        # TZ: "Asia/Tokyo"
 jobs:
   build:
     <<: *defaults
