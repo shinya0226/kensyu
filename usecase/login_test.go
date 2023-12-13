@@ -57,9 +57,10 @@ func TestLogin(t *testing.T) {
 		},
 	}
 	//　DB接続
-	db := ConnectionDB()
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
+			db := ConnectionDB()
+			db.Close()
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
 			got, err := loginUsecase.Login(entity.User(tt.Entity))
