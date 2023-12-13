@@ -22,5 +22,6 @@ func ConnectionDB() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+	db.Close()
 	return db
 }
