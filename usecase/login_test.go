@@ -74,5 +74,4 @@ func TestLogin(t *testing.T) {
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
 		})
 	}
-	db.Close()
 }
