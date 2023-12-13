@@ -63,8 +63,10 @@ jobs:
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
           MYSQL_DATABASE: kensyu_testing
+          
         command: 
           [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci" ]
+
     steps:
       - attach_workspace:
           at: /go
@@ -74,7 +76,7 @@ jobs:
       - run:
           name: "setup base env"
           command: |
-            cat .circleci/.env.circleci >> $BASH_ENV 
+            cat .circleci/.env.circleci >> $BASH_ENV
             source $BASH_ENV
       - run:
           name: "install tool"
@@ -88,7 +90,7 @@ jobs:
           command: |
             ./migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
       - run:
-          name: "do test"
+          name: "do test!"
           command: |
             mkdir -p ./out/gotest
             gotestsum --junitfile ./out/gotest/junit.xml \
