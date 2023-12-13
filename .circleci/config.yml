@@ -7,7 +7,7 @@ defaults: &defaults
       environment:
         GO111MODULE: "on"
         HOME: "/root"
-        # TZ: "Asia/Tokyo"
+        TZ: "Asia/Tokyo"
 jobs:
   build:
     <<: *defaults
@@ -63,7 +63,9 @@ jobs:
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
           MYSQL_DATABASE: kensyu_testing
-        command: [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
+        command: 
+          mysql -u root -pShinya0023
+          [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
     steps:
       - attach_workspace:
           at: /go
