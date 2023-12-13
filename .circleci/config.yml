@@ -56,13 +56,13 @@ jobs:
           GO111MODULE: "on"
           HOME: "/root"
           TZ: "Asia/Tokyo"
-      - image: cimg/mysql:8.0
+      - image: cimg/mysql:5.7
         environment:
           TZ: JST-9
           MYSQL_USER: atsuser
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
-          MYSQL_DATABASE: kensyu_testing
+          MYSQL_DATABASE: yamamoto
         command: [ "--character-set-server=utf8", "--collation-server=utf8_general_ci" ]
     steps:
       - attach_workspace:
