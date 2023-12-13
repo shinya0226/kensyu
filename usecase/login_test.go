@@ -58,8 +58,6 @@ func TestLogin(t *testing.T) {
 	}
 	//　DB接続
 	db := ConnectionDB()
-	db.Close()
-
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			userRepo := NewUserRepository(db)
@@ -76,4 +74,5 @@ func TestLogin(t *testing.T) {
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
 		})
 	}
+	db.Close()
 }
