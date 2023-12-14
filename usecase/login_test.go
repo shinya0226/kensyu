@@ -15,9 +15,9 @@ import (
 // DBの設定
 func prepareTestDatabseLogin() {
 	// fixtureのファイルパス
-	const fixturespath = "../testdata/fixtures"
+	// const fixturespath = "../testdata/fixtures"
 	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(fixturespath, db, &testfixtures.MySQLHelper{})
+	err := testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,7 +79,6 @@ func TestLogin(t *testing.T) {
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
 			got, err := loginUsecase.Login(entity.User(tt.Entity))
-			db.Close()
 
 			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
