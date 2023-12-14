@@ -17,25 +17,7 @@ func Hello(c echo.Context) error {
 // ログイン処理（機能）
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// return LoginWithUsecase(u, c)
-		eu := new(entity.User)
-		logfo := LoginFormat{}
-
-		if err := c.Bind(eu); err != nil {
-			return err
-		}
-		//　Loginの出力をmessageに格納（修正）
-		message, err := u.Login(*eu)
-		if err != nil {
-			return err
-		}
-		//　formatに追加
-		logfo.Email = message.Email
-		logfo.Name = message.Name
-		logfo.IsAdmin = message.IsAdmin
-		logfo.AccessToken = message.AccessToken
-
-		return c.JSON(http.StatusOK, logfo) //　structに詰める
+		return LoginWithUsecase(u, c)
 	}
 }
 
@@ -47,23 +29,23 @@ type LoginFormat struct {
 }
 
 // ログイン処理（詳細）
-// func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
-// eu := new(entity.User)
-// logfo := LoginFormat{}
+func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
+	eu := new(entity.User)
+	logfo := LoginFormat{}
 
-// if err := c.Bind(eu); err != nil {
-// 	return err
-// }
-// //　Loginの出力をmessageに格納（修正）
-// message, err := u.Login(*eu)
-// if err != nil {
-// 	return err
-// }
-// //　formatに追加
-// logfo.Email = message.Email
-// logfo.Name = message.Name
-// logfo.IsAdmin = message.IsAdmin
-// logfo.AccessToken = message.AccessToken
+	if err := c.Bind(eu); err != nil {
+		return err
+	}
+	//　Loginの出力をmessageに格納（修正）
+	message, err := u.Login(*eu)
+	if err != nil {
+		return err
+	}
+	//　formatに追加
+	logfo.Email = message.Email
+	logfo.Name = message.Name
+	logfo.IsAdmin = message.IsAdmin
+	logfo.AccessToken = message.AccessToken
 
-// return c.JSON(http.StatusOK, logfo) //　structに詰める
-// }
+	return c.JSON(http.StatusOK, logfo) //　structに詰める
+}
