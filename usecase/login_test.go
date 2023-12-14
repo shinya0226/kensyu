@@ -58,9 +58,9 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			Description: "Passwordエラーによる不合致",
-			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1ztigau", "山本真也", 0},
+			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
 			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "", 0, ""},
-			WantErr:     false,
+			WantErr:     true,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
