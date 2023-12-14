@@ -12,17 +12,6 @@ import (
 	"gopkg.in/testfixtures.v1"
 )
 
-// // DBの設定
-// func prepareTestDatabseLogin() {
-// 	// fixtureのファイルパス
-// 	// const fixturespath = "../testdata/fixtures"
-// 	db := ConnectionDB()
-// 	err := testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
-
 // login_testの実行
 // EmailとPasswordの合致確認
 func TestLogin(t *testing.T) {
