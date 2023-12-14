@@ -73,7 +73,6 @@ func TestFindSingleRow(t *testing.T) {
 			db := ConnectionDB()
 			//　fixtureの設定
 			prepareTestDatabse()
-			db.Close()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 

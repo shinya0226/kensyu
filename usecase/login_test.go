@@ -13,7 +13,7 @@ import (
 )
 
 // fixtureのファイルパス
-const FixturesPathLogin = "../testdata/fixtures/"
+const FixturesPathLogin = "../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabse() {
