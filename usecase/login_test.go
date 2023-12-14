@@ -12,11 +12,10 @@ import (
 	"gopkg.in/testfixtures.v1"
 )
 
-// fixtureのファイルパス
-const FixturesPathLogin = "../testdata/fixtures"
-
 // DBの設定
 func prepareTestDatabseLogin() {
+	// fixtureのファイルパス
+	const FixturesPathLogin = "../testdata/fixtures"
 	db := ConnectionDB()
 	err := testfixtures.LoadFixtures(FixturesPathLogin, db, &testfixtures.MySQLHelper{})
 	if err != nil {
