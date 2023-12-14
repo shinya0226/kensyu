@@ -31,7 +31,6 @@ func prepareTestDatabse() {
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	//　fixture追加
 	db := ConnectionDB()
-	prepareTestDatabse()
 	db.Close()
 	u := entity.User{}
 	if err := ur.db.QueryRow("SELECT * FROM users where Email = ?", email).
