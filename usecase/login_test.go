@@ -16,7 +16,7 @@ import (
 const FixturesPathLogin = "../testdata/fixtures"
 
 // DBの設定
-func prepareTestDatabse() {
+func prepareTestDatabseLogin() {
 	db := ConnectionDB()
 	err := testfixtures.LoadFixtures(FixturesPathLogin, db, &testfixtures.MySQLHelper{})
 	if err != nil {
@@ -75,7 +75,7 @@ func TestLogin(t *testing.T) {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
 			//　fixtureの設定
-			prepareTestDatabse()
+			prepareTestDatabseLogin()
 
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
