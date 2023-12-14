@@ -88,9 +88,9 @@ func TestLogin(t *testing.T) {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
 			}
 			//　gotとtt.Wantの中身を比較
-			assert.Equal(t, got.Email, tt.Want.Email)
-			assert.Equal(t, got.Name, tt.Want.Name)
-			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
+			assert.Equal(t, tt.Want.Email, got.Email)
+			assert.Equal(t, tt.Want.Name, got.Name)
+			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
 		})
 	}
 }
