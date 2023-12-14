@@ -28,5 +28,4 @@ func main() {
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
-
 }

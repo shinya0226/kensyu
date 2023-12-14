@@ -21,19 +21,18 @@ func TestLogin(t *testing.T) {
 
 	// Login()の出力
 	var userResponse = usecase.LoginFormat{
-		Email:        "shinya.yamamoto6@persol-pt.co.jp",
-		Name:         "山本真也",
-		IsAdmin:      0,
-		Access_token: "Anything"}
+		Email:       "shinya.yamamoto6@persol-pt.co.jp",
+		Name:        "山本真也",
+		IsAdmin:     0,
+		AccessToken: "Anything"}
 
-	//controllerの生成
+	//　controllerの生成
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	//mockの生成
+	//　mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-	//handler.Loginのテスト
+	//　handler.Loginのテスト
 	handler.Login(testMock)
 	testMock.Login(userEntity)
-
 }

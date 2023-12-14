@@ -21,7 +21,6 @@ func prepareTestDatabse() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 // Emailのみの合致確認
@@ -37,7 +36,7 @@ func TestFindSingleRow(t *testing.T) {
 		Email       string `json:"email"`
 		Password    string `json:"password"`
 		Want        user
-		WantErr     bool //エラーが出るときはtrue
+		WantErr     bool //　エラーが出るときはtrue
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
@@ -72,22 +71,21 @@ func TestFindSingleRow(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
-			//fixtureの設定
+			//　fixtureの設定
 			prepareTestDatabse()
-
+			db.Close()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 
-			//errがあるか判別（あるときはtrue,ないときはfalse）
+			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
 				t.Errorf("FindSingleRow() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			//gotとtt.Wantの中身を比較
+			//　gotとtt.Wantの中身を比較
 			assert.Equal(t, got.Email, tt.Want.Email)
 			assert.Equal(t, got.Password, tt.Want.Password)
 			assert.Equal(t, got.Name, tt.Want.Name)
 			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
-			return
 		})
 	}
 }
