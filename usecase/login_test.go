@@ -46,7 +46,7 @@ func TestLogin(t *testing.T) {
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
-			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10", "山本真也", 0},
+			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1zVDAS", "山本真也", 0},
 			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
 			WantErr:     false,
 		},
