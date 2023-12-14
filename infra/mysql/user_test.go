@@ -56,7 +56,7 @@ func TestFindSingleRow(t *testing.T) {
 			Description: "Passwordエラーによる不合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
 			Password:    "Passwordは違うよ",
-			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", "", "山本真也", 0},
+			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1zVDAS", "山本真也", 0},
 			WantErr:     false,
 		},
 		{
