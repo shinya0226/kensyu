@@ -2,8 +2,10 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/shinya0226/kensyu/entity"
+	"gopkg.in/testfixtures.v1"
 )
 
 type userRepository struct {
@@ -14,7 +16,23 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 	return &userRepository{db: db}
 }
 
+// fixtureのファイルパス
+const FixturesPathSQL = "../../testdata/fixtures"
+
+// DBの設定
+func prepareTestDatabse() {
+	db := ConnectionDB()
+	err := testfixtures.LoadFixtures(FixturesPathSQL, db, &testfixtures.MySQLHelper{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
+	//　fixture追加
+	db := ConnectionDB()
+	prepareTestDatabse()
+	db.Close()
 	u := entity.User{}
 	if err := ur.db.QueryRow("SELECT * FROM users where Email = ?", email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
