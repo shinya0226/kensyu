@@ -74,7 +74,10 @@ func TestLogin(t *testing.T) {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
 			//　fixtureの設定
-			prepareTestDatabseLogin()
+			err := testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
