@@ -26,7 +26,6 @@ func TestLogin(t *testing.T) {
 		IsAdmin:     0,
 		AccessToken: "Anything"}
 
-	//　controllerの生成
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	//　mockの生成
