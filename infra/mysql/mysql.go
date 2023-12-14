@@ -6,7 +6,7 @@ import (
 )
 
 func ConnectionDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:Shinya0023@tcp(127.0.0.1:3306)/test_fix?parseTime=true")
+	db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}
