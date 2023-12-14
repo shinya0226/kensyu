@@ -15,9 +15,9 @@ import (
 // DBの設定
 func prepareTestDatabseLogin() {
 	// fixtureのファイルパス
-	const FixturesPathLogin = "../testdata/fixtures"
+	const Fixturespath = "../testdata/fixtures"
 	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(FixturesPathLogin, db, &testfixtures.MySQLHelper{})
+	err := testfixtures.LoadFixtures(Fixturespath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}
