@@ -13,7 +13,7 @@ import (
 )
 
 // fixtureのファイルパス
-const FixturesPathLogin = "../testdata/fixtures"
+const FixturesPathLogin = "../testdata/fixtures/"
 
 // DBの設定
 func prepareTestDatabse() {
@@ -76,7 +76,6 @@ func TestLogin(t *testing.T) {
 			db := ConnectionDB()
 			//　fixtureの設定
 			prepareTestDatabse()
-			db.Close()
 
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
