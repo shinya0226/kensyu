@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"log"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -8,7 +9,20 @@ import (
 	. "github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/testfixtures.v1"
 )
+
+// fixtureのファイルパス
+const FixturesPathLogin = "../../testdata/fixtures"
+
+// DBの設定
+func prepareTestDatabse() {
+	db := ConnectionDB()
+	err := testfixtures.LoadFixtures(FixturesPathLogin, db, &testfixtures.MySQLHelper{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 // login_testの実行
 // EmailとPasswordの合致確認
@@ -60,6 +74,9 @@ func TestLogin(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
+			//　fixtureの設定
+			prepareTestDatabse()
+			db.Close()
 
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
