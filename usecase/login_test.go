@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"log"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -8,6 +9,7 @@ import (
 	. "github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/testfixtures.v1"
 )
 
 // login_testの実行
@@ -46,8 +48,8 @@ func TestLogin(t *testing.T) {
 		{
 			Description: "Passwordエラーによる不合致",
 			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
-			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, ""},
-			WantErr:     false,
+			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "", 0, ""},
+			WantErr:     true,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
@@ -60,20 +62,24 @@ func TestLogin(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
+			//　fixtureの設定
+			err := testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
 			got, err := loginUsecase.Login(entity.User(tt.Entity))
-			db.Close()
 
 			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
 			}
 			//　gotとtt.Wantの中身を比較
-			assert.Equal(t, got.Email, tt.Want.Email)
-			assert.Equal(t, got.Name, tt.Want.Name)
-			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
+			assert.Equal(t, tt.Want.Email, got.Email)
+			assert.Equal(t, tt.Want.Name, got.Name)
+			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
 		})
 	}
 }

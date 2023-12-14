@@ -65,7 +65,8 @@ jobs:
           MYSQL_DATABASE: kensyu_testing
           
         command: 
-          [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci" ]
+
+          [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]
 
     steps:
       - attach_workspace:
