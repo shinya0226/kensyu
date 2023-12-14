@@ -6,7 +6,6 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/usecase"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,10 +22,10 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 }
 
 type LoginFormat struct {
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	IsAdmin      int    `json:"isAdmin"`
-	Access_token string `json:"access_token"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
 }
 
 // ログイン処理（詳細）
@@ -37,16 +36,16 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
-	//Loginの出力をmessageに格納
+	//　Loginの出力をmessageに格納（修正）
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
 	}
-	//formatに追加
+	//　formatに追加
 	logfo.Email = message.Email
 	logfo.Name = message.Name
 	logfo.IsAdmin = message.IsAdmin
-	logfo.Access_token = message.Access_token
+	logfo.AccessToken = message.AccessToken
 
-	return c.JSON(http.StatusOK, logfo) //structに詰める
+	return c.JSON(http.StatusOK, logfo) //　structに詰める
 }
