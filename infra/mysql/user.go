@@ -17,15 +17,6 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 // fixtureのファイルパス
 const FixturesPathSQL = "../../testdata/fixtures"
 
-// DBの設定
-// func prepareTestDatabse() {
-// 	db := ConnectionDB()
-// 	err := testfixtures.LoadFixtures(FixturesPathSQL, db, &testfixtures.MySQLHelper{})
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
-
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	//　fixture追加
 	db := ConnectionDB()
