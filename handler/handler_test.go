@@ -6,7 +6,6 @@ import (
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
-	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/golang/mock/gomock"
 )
@@ -21,11 +20,17 @@ func TestLogin(t *testing.T) {
 		IsAdmin:  0}
 
 	// Login()の出力
-	var userResponse = usecase.LoginFormat{
-		Email:       "shinya.yamamoto6@persol-pt.co.jp",
-		Name:        "山本真也",
-		IsAdmin:     0,
-		AccessToken: "Anything"}
+	// var userResponse = usecase.LoginFormat{
+	// 	Email:       "shinya.yamamoto6@persol-pt.co.jp",
+	// 	Name:        "山本真也",
+	// 	IsAdmin:     0,
+	// 	AccessToken: "Anything"}
+
+	var userResponse = entity.User{
+		Email:    "shinya.yamamoto6@persol-pt.co.jp",
+		Password: "yamamo10",
+		Name:     "山本真也",
+		IsAdmin:  0}
 
 	ctrl := gomock.NewController(t)
 	// defer ctrl.Finish()
@@ -33,11 +38,13 @@ func TestLogin(t *testing.T) {
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 	// handler.Login(testMock)
-	res, err := testMock.Login(userEntity)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if res != userResponse {
-		log.Fatal(err)
-	}
+	// res, err := testMock.Login(userEntity)
+	res := handler.Login(testMock)
+	log.Fatal(res)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// if res != userResponse {
+	// 	log.Fatal(err)
+	// }
 }
