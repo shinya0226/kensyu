@@ -11,7 +11,7 @@ import (
 )
 
 // handler_testの実行
-func TestLogin(t *testing.T) {
+func TestLogin(t *testing.T) error {
 	// Login()の入力
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
@@ -33,6 +33,13 @@ func TestLogin(t *testing.T) {
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
 	//　handler.Loginのテスト
-	handler.Login(testMock)
-	// testMock.Login(testMock)
+	// handler.Login(testMock)
+	res, err := testMock.Login(userEntity)
+	if err != nil {
+		return err
+	}
+	if res != userResponse {
+		return err
+	}
+	return err
 }
