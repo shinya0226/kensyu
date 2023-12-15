@@ -10,6 +10,13 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
+}
+
 // handler_testの実行
 func TestLogin(t *testing.T) {
 	// Login()の入力
