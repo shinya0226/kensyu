@@ -30,7 +30,6 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 		logfo.AccessToken = message.AccessToken
 
 		return c.JSON(http.StatusOK, logfo) //　structに詰める
-
 	}
 }
 

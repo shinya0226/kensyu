@@ -23,7 +23,7 @@ func main() {
 
 	// ルートを設定
 	// e.POST("/login", handler.Login(loginUsecase))
-	e.POST("/login", handler.LoginAccount(loginUsecase))
+	e.POST("/login", handler.Login(loginUsecase))
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
