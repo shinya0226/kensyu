@@ -33,6 +33,6 @@ func TestLogin(t *testing.T) {
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
 	//　handler.Loginのテスト
-	// handler.Login(testMock)
-	testMock.Login(userEntity)
+	handler.Login(testMock)
+	// testMock.Login(testMock)
 }
