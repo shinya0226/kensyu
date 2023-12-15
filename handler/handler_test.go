@@ -1,12 +1,16 @@
 package handler_test
 
 import (
+	"net/http/httptest"
+	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo/v4"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
+	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/golang/mock/gomock"
 )
@@ -55,13 +59,27 @@ func TestLogin(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			// defer ctrl.Finish()
+			defer ctrl.Finish()
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-			// handler.Login(testMock)
-			handler.Login(testMock)
+			// handler.LoginFunc(testMock)
+			// handler.LoginWithUsecase(testMock, c)
+			e := echo.New()
+			req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+
+			next := func(c echo.Context) error {
+				return handler.LoginWithUsecase(testMock, c)
+			}
+			handler.LoginFunc(next)(c)
+
 		})
 	}
-	// response := handler.Login(testMock)
+}
+func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return handler.LoginWithUsecase(u, c)
+	}
 }
