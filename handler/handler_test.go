@@ -34,14 +34,14 @@ func TestLogin(t *testing.T) {
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 	// handler.Login(testMock)
 	res, err := testMock.Login(userEntity)
-	// res,err := handler.Login(testMock)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	if res != userResponse {
 		log.Fatal(res)
 	}
 	if err != nil {
 		log.Fatal(err)
+	}
+	response := handler.Login(testMock)
+	if response != nil {
+		log.Fatal(response)
 	}
 }
