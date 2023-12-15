@@ -34,5 +34,5 @@ func TestLogin(t *testing.T) {
 
 	//　handler.Loginのテスト
 	// handler.Login(testMock)
-	// testMock.Login(userEntity)
+	testMock.Login(userEntity)
 }
