@@ -35,13 +35,13 @@ func TestLogin(t *testing.T) {
 	// handler.Login(testMock)
 	res, err := testMock.Login(userEntity)
 	if res != userResponse {
-		log.Fatal(res)
+		log.Fatal("エラー1")
 	}
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("エラー2")
 	}
 	response := handler.Login(testMock)
 	if response != nil {
-		log.Fatal(response)
+		log.Fatal("エラー3")
 	}
 }
