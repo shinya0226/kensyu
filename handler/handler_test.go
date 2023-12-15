@@ -33,13 +33,15 @@ func TestLogin(t *testing.T) {
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 	// handler.Login(testMock)
-	// res, err := testMock.Login(userEntity)
-	res := handler.Login(testMock)
-	log.Fatal(res)
+	res, err := testMock.Login(userEntity)
+	// res,err := handler.Login(testMock)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	// if res != userResponse {
-	// 	log.Fatal(err)
-	// }
+	if res != userResponse {
+		log.Fatal(res)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
