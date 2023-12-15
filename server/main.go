@@ -22,8 +22,6 @@ func main() {
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	// ルートを設定
-	e.GET("/", handler.Hello)
-
 	e.POST("/login", handler.Login(loginUsecase))
 
 	// サーバーをポート番号8080で起動

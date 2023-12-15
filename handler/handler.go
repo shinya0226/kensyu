@@ -9,11 +9,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// 初期画面の表示
-func Hello(c echo.Context) error {
-	return c.String(http.StatusOK, "お仕事おつかれ様")
-}
-
 // ログイン処理（機能）
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
