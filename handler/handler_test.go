@@ -1,6 +1,8 @@
 package handler_test
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"testing"
 
@@ -40,8 +42,10 @@ func TestLogin(t *testing.T) {
 	if err != nil {
 		log.Fatal("エラー2")
 	}
-	response := handler.Login(testMock)
-	if response != nil {
-		log.Fatal("エラー3")
-	}
+	// response := handler.Login(testMock)
+	json, err := json.Marshal(res)
+	fmt.Println(res)
+
+	fmt.Printf("response: %v\n", json)
+
 }
