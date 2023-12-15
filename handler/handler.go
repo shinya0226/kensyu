@@ -6,6 +6,8 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/usecase"
 
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -37,10 +39,12 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　formatに追加
-	logfo.Email = message.Email
-	logfo.Name = message.Name
-	logfo.IsAdmin = message.IsAdmin
-	logfo.AccessToken = message.AccessToken
+	fmt.Println(logfo)
+	fmt.Println(message)
+	// logfo.Email = message.Email
+	// logfo.Name = message.Name
+	// logfo.IsAdmin = message.IsAdmin
+	// logfo.AccessToken = message.AccessToken
 
 	// return c.JSON(http.StatusOK, logfo) //　structに詰める
 	return err
