@@ -28,7 +28,7 @@ func TestLogin(t *testing.T) {
 		AccessToken: "Anything"}
 
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	// defer ctrl.Finish()
 	//　mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
