@@ -1,10 +1,14 @@
 package handler_test
 
 import (
+	"log"
 	"testing"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
+	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
 	"github.com/stretchr/testify/assert"
 
@@ -79,6 +83,17 @@ func TestLogin(t *testing.T) {
 			testMock.EXPECT().Login(entity.User(userEntity)).Return(usecase.LoginFormat(userResponse), nil)
 			// handler.Login(testMock)
 			got, err := testMock.Login(entity.User(userEntity))
+			type ILoginUsecase interface {
+				Login(e entity.User) (LoginFormat, error)
+			}
+			db := mysql.ConnectionDB()
+			userRepo := mysql.NewUserRepository(db)
+			loginUsecase := usecase.NewLoginUsecase(userRepo)
+
+			get := handler.Login(loginUsecase)
+
+			log.Fatal(get)
+
 			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
 				t.Errorf("FindSingleRow() error = %v, wantErr %v", err, tt.WantErr)
