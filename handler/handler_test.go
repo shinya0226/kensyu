@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"log"
 	"testing"
 
 	"github.com/shinya0226/kensyu/entity"
@@ -11,7 +12,7 @@ import (
 )
 
 // handler_testの実行
-func TestLogin(t *testing.T) error {
+func TestLogin(t *testing.T) {
 	// Login()の入力
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
@@ -36,10 +37,10 @@ func TestLogin(t *testing.T) error {
 	// handler.Login(testMock)
 	res, err := testMock.Login(userEntity)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	if res != userResponse {
-		return err
+		log.Fatal(err)
 	}
-	return err
+	log.Fatal(err)
 }
