@@ -10,13 +10,6 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-type LoginFormat struct {
-	Email       string `json:"email"`
-	Name        string `json:"name"`
-	IsAdmin     int    `json:"isAdmin"`
-	AccessToken string `json:"access_token"`
-}
-
 // handler_testの実行
 func TestLogin(t *testing.T) {
 	// Login()の入力
@@ -26,40 +19,40 @@ func TestLogin(t *testing.T) {
 		Name     string `json:"name"`
 		IsAdmin  int    `json:"isAdmin"`
 	}
-	type LoginFormat struct {
+	type LoginFormatHandler struct {
 		Email       string `json:"email"`
 		Name        string `json:"name"`
 		IsAdmin     int    `json:"isAdmin"`
 		AccessToken string `json:"access_token"`
 	}
 	testCase := []struct {
-		Description string      `json:"Description"`
-		Entity      user        `json:"Email"` //　入力
-		Want        LoginFormat //　出力
-		WantErr     bool        //　エラーが出るときはtrue
+		Description string             `json:"Description"`
+		Entity      user               `json:"Email"` //　入力
+		Want        LoginFormatHandler //　出力
+		WantErr     bool               //　エラーが出るときはtrue
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
 			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10", "山本真也", 0},
-			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
+			Want:        LoginFormatHandler{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
 			WantErr:     false,
 		},
 		{
 			Description: "Emailエラーによる不合致",
 			Entity:      user{"Emailは違うよ", "yamamo10", "山本真也", 0},
-			Want:        LoginFormat{"", "", 0, ""},
+			Want:        LoginFormatHandler{"", "", 0, ""},
 			WantErr:     true,
 		},
 		{
 			Description: "Passwordエラーによる不合致",
 			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
-			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "", 0, ""},
+			Want:        LoginFormatHandler{"shinya.yamamoto6@persol-pt.co.jp", "", 0, ""},
 			WantErr:     true,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
 			Entity:      user{"", "", "山本真也", 0},
-			Want:        LoginFormat{"", "", 0, ""},
+			Want:        LoginFormatHandler{"", "", 0, ""},
 			WantErr:     true,
 		},
 	}
