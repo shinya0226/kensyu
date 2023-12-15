@@ -42,5 +42,4 @@ func TestLogin(t *testing.T) {
 	if res != userResponse {
 		log.Fatal(err)
 	}
-	log.Fatal(err)
 }
