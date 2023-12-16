@@ -72,11 +72,10 @@ func TestLogin(t *testing.T) {
 			// 	return handler.LoginWithUsecase(testMock, c)
 			// }
 
-			output, err := testMock.Login(userEntity)
+			_, err := testMock.Login(userEntity)
 			if err != nil {
 				log.Fatal(err)
 			}
-			log.Fatal(output)
 
 			// handler.LoginFunc(testMock)
 			// handler.LoginWithUsecase(testMock, c)
@@ -93,7 +92,6 @@ func TestLogin(t *testing.T) {
 			//  検証
 			// log.Fatal(LoginFunc(testMock(next)(c)))
 			// handler.LoginFunc()(c)
-
 		})
 	}
 }
