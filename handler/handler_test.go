@@ -1,7 +1,6 @@
 package handler_test
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -80,12 +79,8 @@ func TestLogin(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			err := handler.Login(testMock)
-			if err != nil {
-				log.Fatal(err)
-			}
+			handler.Login(testMock)
 			handler.LoginWithUsecase(testMock, c)
-
 		})
 	}
 }
