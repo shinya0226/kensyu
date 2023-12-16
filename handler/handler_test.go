@@ -79,12 +79,12 @@ func TestLogin(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			handler.Login(testMock)
-			handler.LoginWithUsecase(testMock, c)
+			Login(testMock)
+			LoginWithUsecase(testMock, c)
 		})
 	}
 }
-func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
+func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return handler.LoginWithUsecase(u, c)
 	}
