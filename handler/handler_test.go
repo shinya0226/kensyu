@@ -87,7 +87,10 @@ func TestLogin(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			handler.LoginWithUsecase(testMock, c)
+			err = handler.LoginWithUsecase(testMock, c)
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			// next().
 			// 	LoginFunc(testMock)
