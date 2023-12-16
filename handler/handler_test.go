@@ -1,13 +1,11 @@
 package handler_test
 
 import (
-	"log"
-	"net/http/httptest"
-	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -59,6 +57,9 @@ func TestLogin(t *testing.T) {
 
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
+			e := echo.New()
+			e.Use(middleware.Logger())
+			e.Use(middleware.Recover())
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 			//　mockの生成
@@ -66,16 +67,21 @@ func TestLogin(t *testing.T) {
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 			// handler.LoginFunc(testMock)
 			// handler.LoginWithUsecase(testMock, c)
-			e := echo.New()
-			req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
-			rec := httptest.NewRecorder()
-			c := e.NewContext(req, rec)
 
-			next := func(c echo.Context) error {
-				return handler.LoginWithUsecase(testMock, c)
-			}
+			// req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
+			// rec := httptest.NewRecorder()
+			// c := e.NewContext(req, rec)
+
+			// next := func(c echo.Context) error {
+			// 	return handler.LoginWithUsecase(testMock, c)
+			// }
+			e.POST("/login", handler.LoginFunc(testMock))
+			e.Logger.Fatal(e.Start(":8080"))
+
+			// next().
+			// 	LoginFunc(testMock)
 			//  検証
-			log.Fatal(next(c))
+			// log.Fatal(LoginFunc(testMock(next)(c)))
 			// handler.LoginFunc()(c)
 
 		})
