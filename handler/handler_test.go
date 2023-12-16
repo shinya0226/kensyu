@@ -2,6 +2,7 @@ package handler_test
 
 import (
 	"log"
+	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -82,7 +83,7 @@ func TestLogin(t *testing.T) {
 			// handler.LoginFunc(testMock)
 			// handler.LoginWithUsecase(testMock, c)
 
-			req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
+			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
