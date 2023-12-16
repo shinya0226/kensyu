@@ -74,6 +74,7 @@ func TestLogin(t *testing.T) {
 			next := func(c echo.Context) error {
 				return handler.LoginWithUsecase(testMock, c)
 			}
+			//  検証
 			log.Fatal(next(c))
 			// handler.LoginFunc()(c)
 
