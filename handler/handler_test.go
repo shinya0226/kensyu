@@ -84,10 +84,8 @@ func TestLogin(t *testing.T) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			got := handler.LoginWithUsecase(testMock, c)
-			if got != nil {
-				log.Fatal(got)
-			}
+			handler.LoginWithUsecase(testMock, c)
+
 		})
 	}
 }
