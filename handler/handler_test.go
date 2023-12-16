@@ -2,6 +2,8 @@ package handler_test
 
 import (
 	"log"
+	"net/http/httptest"
+	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -80,9 +82,11 @@ func TestLogin(t *testing.T) {
 			// handler.LoginFunc(testMock)
 			// handler.LoginWithUsecase(testMock, c)
 
-			// req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
-			// rec := httptest.NewRecorder()
-			// c := e.NewContext(req, rec)
+			req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+
+			handler.LoginWithUsecase(testMock, c)
 
 			// next().
 			// 	LoginFunc(testMock)
