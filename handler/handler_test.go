@@ -65,7 +65,7 @@ func TestLogin(t *testing.T) {
 			defer ctrl.Finish()
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
-			// testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
 			// next := func(c echo.Context) error {
