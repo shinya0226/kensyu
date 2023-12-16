@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -60,7 +61,6 @@ func TestLogin(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			e := echo.New()
-			// ctx := context.Background()
 			e.Use(middleware.Logger())
 			e.Use(middleware.Recover())
 			ctrl := gomock.NewController(t)
@@ -79,15 +79,15 @@ func TestLogin(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
-			handler.Login(testMock)
 
-			handler.LoginWithUsecase(testMock, c)
-
-			// next().
-
-			//  検証
-			// log.Fatal(LoginFunc(testMock(next)(c)))
-			// handler.LoginFunc()(c)
+			err := handler.Login(testMock)
+			if err != nil {
+				log.Fatal(err)
+			}
+			got := handler.LoginWithUsecase(testMock, c)
+			if got != nil {
+				log.Fatal(got)
+			}
 		})
 	}
 }
