@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"log"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -73,7 +74,8 @@ func TestLogin(t *testing.T) {
 			next := func(c echo.Context) error {
 				return handler.LoginWithUsecase(testMock, c)
 			}
-			handler.LoginFunc(next)(c)
+			log.Fatal(next(c))
+			// handler.LoginFunc()(c)
 
 		})
 	}
