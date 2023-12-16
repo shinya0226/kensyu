@@ -10,7 +10,7 @@ import (
 )
 
 // ログイン処理（機能）
-func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
+func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return LoginWithUsecase(u, c)
 	}
