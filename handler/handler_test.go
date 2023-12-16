@@ -3,7 +3,6 @@ package handler_test
 import (
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
@@ -18,8 +17,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	code := m.Run()
-	os.Exit(code)
+	m.Run()
 }
 
 // handler_testの実行
