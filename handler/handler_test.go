@@ -84,9 +84,6 @@ func TestLogin(t *testing.T) {
 			// rec := httptest.NewRecorder()
 			// c := e.NewContext(req, rec)
 
-			e.POST("/login", handler.Login(testMock))
-			e.Logger.Fatal(e.Start(":8080"))
-
 			// next().
 			// 	LoginFunc(testMock)
 			//  検証
