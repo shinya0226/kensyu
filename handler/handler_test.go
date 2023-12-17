@@ -108,7 +108,7 @@ func TestUsecase(t *testing.T) {
 // 見本
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return handler.LoginWithUsecase(u, c)
+		return LoginWithUsecase(u, c)
 	}
 }
 func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
