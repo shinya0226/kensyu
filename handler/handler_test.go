@@ -93,7 +93,7 @@ func TestUsecase(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	err := handler.LoginWithUsecase(testMock, c)
-	assert.Error(t, err)
+	assert.Error(t, err, echo.ErrInsufficientStorage)
 }
 
 // 　見本
