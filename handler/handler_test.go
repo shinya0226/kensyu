@@ -134,6 +134,10 @@ func TestUsecase(t *testing.T) {
 		Name:        "山本真也",
 		IsAdmin:     0,
 		AccessToken: "Anything"}
+
+	var (
+		userJSON = `{"Email":"shinya.yamamoto6@persol-pt.co.jp","Password":"yamamo10"}`
+	)
 	e := echo.New()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -141,7 +145,7 @@ func TestUsecase(t *testing.T) {
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
-	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userEntity.Email))
+	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	c.SetPath("/login")
