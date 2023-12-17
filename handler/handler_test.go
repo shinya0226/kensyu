@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -63,7 +64,7 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-			Login(testMock)
+			handler.Login(testMock)
 		})
 	}
 }
@@ -91,11 +92,12 @@ func TestUsecase(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	LoginWithUsecase(testMock, c)
+	err := handler.LoginWithUsecase(testMock, c)
+	assert.Error(t, err)
 }
 
 // 　見本
-func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
+func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return handler.LoginWithUsecase(u, c)
 	}
