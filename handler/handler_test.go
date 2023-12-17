@@ -141,7 +141,7 @@ func TestUsecase(t *testing.T) {
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
 
-	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
+	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userEntity.Email))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	c.SetPath("/login")
