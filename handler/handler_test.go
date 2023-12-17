@@ -135,7 +135,7 @@ func TestLoginWithUsecase(t *testing.T) {
 		AccessToken: "Anything"}
 
 	var (
-		userJSON = `{"Email":"shinya.yamamoto6@persol-pt.co.jp","Password":"yamamo10", "Name":"山本真也","IsAdmin":0}`
+		userJSON = `{email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10", "name":"山本真也","isAdmin":0}`
 	)
 	e := echo.New()
 	ctrl := gomock.NewController(t)
