@@ -121,7 +121,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	return logfo, nil
 }
 
-func TestUsecase(t *testing.T) {
+func TestLoginWithUsecase(t *testing.T) {
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
 		Password: "yamamo10",
@@ -136,7 +136,7 @@ func TestUsecase(t *testing.T) {
 		AccessToken: "Anything"}
 
 	var (
-		userJSON = `{"Email":"shinya.yamamoto6@persol-pt.co.jp","Password":"yamamo10"}`
+		userJSON = `{"Email":"shinya.yamamoto6@persol-pt.co.jp","Password":"yamamo10", "Name":"山本真也","IsAdmin":0}`
 	)
 	e := echo.New()
 	ctrl := gomock.NewController(t)
