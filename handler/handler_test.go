@@ -71,7 +71,7 @@ func TestLogin(t *testing.T) {
 			// req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
 			// rec := httptest.NewRecorder()
 			// c := e.NewContext(req, rec)
-			handler.Login(testMock)
+			Login(testMock)
 			// handler.LoginWithUsecase(testMock, c)
 		})
 	}
@@ -103,16 +103,14 @@ func TestUsecase(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	handler.LoginWithUsecase(testMock, c)
-
 }
 
-func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
+func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return handler.LoginWithUsecase(u, c)
+		return LoginWithUsecase(u, c)
 	}
 }
 
-// ログイン処理（詳細）
 func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
 	logfo := LoginFormat{}
