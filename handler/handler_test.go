@@ -66,24 +66,46 @@ func TestLogin(t *testing.T) {
 			defer ctrl.Finish()
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
-
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-
-			// next := func(c echo.Context) error {
-			// 	return handler.LoginWithUsecase(testMock, c)
-			// }
-			// handler.LoginFunc(testMock)
-			// handler.LoginWithUsecase(testMock, c)
-
-			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
-			rec := httptest.NewRecorder()
-			c := e.NewContext(req, rec)
-
+			//  うまくいってるやつ
+			// req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
+			// rec := httptest.NewRecorder()
+			// c := e.NewContext(req, rec)
 			handler.Login(testMock)
-			handler.LoginWithUsecase(testMock, c)
+			// handler.LoginWithUsecase(testMock, c)
 		})
 	}
 }
+
+func TestUsecase(t *testing.T) {
+	var userEntity = entity.User{
+		Email:    "shinya.yamamoto6@persol-pt.co.jp",
+		Password: "yamamo10",
+		Name:     "山本真也",
+		IsAdmin:  0}
+
+	// Login()の出力
+	var userResponse = usecase.LoginFormat{
+		Email:       "shinya.yamamoto6@persol-pt.co.jp",
+		Name:        "山本真也",
+		IsAdmin:     0,
+		AccessToken: "Anything"}
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	//　mockの生成
+	testMock := handler.NewMockILoginUsecase(ctrl)
+	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+	//  うまくいってるやつ
+	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	handler.LoginWithUsecase(testMock, c)
+
+}
+
 func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return handler.LoginWithUsecase(u, c)
