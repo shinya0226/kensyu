@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -64,9 +65,59 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-			handler.Login(testMock)
+			got, err := testMock.Login(entity.User(tt.Entity))
+			if err != nil {
+				log.Fatal(err)
+			}
+			assert.Equal(t, tt.Want.Email, got.Email)
+			assert.Equal(t, tt.Want.Name, got.Name)
+			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
+			assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
 		})
 	}
+}
+
+type loginUsecase struct {
+	repo entity.IUserRepository
+}
+
+func NewLoginUsecase(repo entity.IUserRepository) ILoginUsecase {
+	return &loginUsecase{repo: repo}
+}
+
+type ILoginUsecase interface {
+	Login(e entity.User) (LoginFormat, error)
+}
+
+func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
+	//　該当するユーザーを抽出（found）
+	found, err := u.repo.FindSingleRow(e.Email)
+
+	//　出力の型を定義
+	logfo := LoginFormat{}
+	//　Emailの合致確認
+	if err != nil {
+		return logfo, err
+	}
+	logfo.Email = found.Email
+
+	//　Passwordの合致確認
+	err = usecase.VerifyPassword(found.Password, e.Password)
+	if err != nil {
+		return logfo, err
+	}
+	logfo.Name = found.Name
+	logfo.IsAdmin = found.IsAdmin
+
+	//　JWTの作成
+	jwtMessage, err := usecase.CreateToken(e.Email)
+	if err != nil {
+		return logfo, err
+	}
+	//　出力の型を定義
+	logfo.AccessToken = jwtMessage
+
+	return logfo, nil
 }
 
 func TestUsecase(t *testing.T) {
