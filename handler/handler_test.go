@@ -1,18 +1,18 @@
 package handler_test
 
 import (
+	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
+	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/usecase"
-
-	"github.com/golang/mock/gomock"
 )
 
 // handler_testの実行
@@ -50,7 +50,7 @@ func TestLogin(t *testing.T) {
 		IsAdmin:  0}
 
 	// Login()の出力
-	var userResponse = LoginFormat{
+	var userResponse = usecase.LoginFormat{
 		Email:       "shinya.yamamoto6@persol-pt.co.jp",
 		Name:        "山本真也",
 		IsAdmin:     0,
@@ -63,23 +63,127 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-			// handler.LoginFunc(testMock)
-			// handler.LoginWithUsecase(testMock, c)
-			e := echo.New()
-			req := httptest.NewRequest("POST", "/login", strings.NewReader(""))
-			rec := httptest.NewRecorder()
-			c := e.NewContext(req, rec)
 
-			next := func(c echo.Context) error {
-				return handler.LoginWithUsecase(testMock, c)
-			}
-			handler.LoginFunc(next)(c)
-
+			// got, err := testMock.Login(entity.User(tt.Entity))
+			handler.Login(testMock)
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+			// assert.Equal(t, tt.Want.Email, got.Email)
+			// assert.Equal(t, tt.Want.Name, got.Name)
+			// assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
+			// assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
 		})
 	}
 }
+
+type loginUsecase struct {
+	repo entity.IUserRepository
+}
+
+func NewLoginUsecase(repo entity.IUserRepository) ILoginUsecase {
+	return &loginUsecase{repo: repo}
+}
+
+type ILoginUsecase interface {
+	Login(e entity.User) (LoginFormat, error)
+}
+
+func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
+	//　該当するユーザーを抽出（found）
+	found, err := u.repo.FindSingleRow(e.Email)
+
+	//　出力の型を定義
+	logfo := LoginFormat{}
+	//　Emailの合致確認
+	if err != nil {
+		return logfo, err
+	}
+	logfo.Email = found.Email
+
+	//　Passwordの合致確認
+	err = usecase.VerifyPassword(found.Password, e.Password)
+	if err != nil {
+		return logfo, err
+	}
+	logfo.Name = found.Name
+	logfo.IsAdmin = found.IsAdmin
+
+	//　JWTの作成
+	jwtMessage, err := usecase.CreateToken(e.Email)
+	if err != nil {
+		return logfo, err
+	}
+	//　出力の型を定義
+	logfo.AccessToken = jwtMessage
+
+	return logfo, nil
+}
+
+func TestLoginWithUsecase(t *testing.T) {
+	var userEntity = entity.User{
+		Email:    "shinya.yamamoto6@persol-pt.co.jp",
+		Password: "yamamo10",
+		Name:     "山本真也",
+		IsAdmin:  0}
+
+	// Login()の出力
+	var userResponse = usecase.LoginFormat{
+		Email:       "shinya.yamamoto6@persol-pt.co.jp",
+		Name:        "山本真也",
+		IsAdmin:     0,
+		AccessToken: "Anything"}
+
+	var (
+		userJSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10", "name":"山本真也","isAdmin":0}`
+	)
+	e := echo.New()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	//　mockの生成
+	testMock := handler.NewMockILoginUsecase(ctrl)
+	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+
+	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	handler.LoginWithUsecase(testMock, c)
+	// if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
+	// 	assert.Equal(t, http.StatusOK, rec.Code)
+	// 	assert.Equal(t, userResponse, rec.Body.String())
+	// }
+}
+
+// 　見本
 func LoginFunc(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return handler.LoginWithUsecase(u, c)
 	}
+}
+func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
+	eu := new(entity.User)
+	logfo := LoginFormat{}
+
+	if err := c.Bind(eu); err != nil {
+		return err
+	}
+	//　Loginの出力をmessageに格納（修正）
+	message, err := u.Login(*eu)
+	if err != nil {
+		return err
+	}
+	//　formatに追加
+	logfo.Email = message.Email
+	logfo.Name = message.Name
+	logfo.IsAdmin = message.IsAdmin
+	logfo.AccessToken = message.AccessToken
+
+	return c.JSON(http.StatusOK, logfo) //　structに詰める
+}
+
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
 }
