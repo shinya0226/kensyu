@@ -148,9 +148,6 @@ func TestUsecase(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/login")
-	c.SetParamNames("Email,Password,Name,IsAdmin")
-	c.SetParamValues("shinya.yamamoto0033@gmail.com,yamamo10,山本真也,0")
 	// handler.LoginWithUsecase(testMock, c)
 	if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
