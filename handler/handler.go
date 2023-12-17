@@ -26,7 +26,7 @@ type LoginFormat struct {
 // ログイン処理（詳細）
 func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
-	logfo := LoginFormat{}
+	// logfo := LoginFormat{}
 
 	if err := c.Bind(eu); err != nil {
 		return err
@@ -37,10 +37,10 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　formatに追加
-	logfo.Email = message.Email
-	logfo.Name = message.Name
-	logfo.IsAdmin = message.IsAdmin
-	logfo.AccessToken = message.AccessToken
+	// logfo.Email = message.Email
+	// logfo.Name = message.Name
+	// logfo.IsAdmin = message.IsAdmin
+	// logfo.AccessToken = message.AccessToken
 
-	return c.JSON(http.StatusOK, logfo) //　structに詰める
+	return c.JSON(http.StatusOK, message) //　structに詰める
 }
