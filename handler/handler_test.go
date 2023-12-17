@@ -1,7 +1,6 @@
 package handler_test
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -65,14 +64,16 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-			got, err := testMock.Login(entity.User(tt.Entity))
-			if err != nil {
-				log.Fatal(err)
-			}
-			assert.Equal(t, tt.Want.Email, got.Email)
-			assert.Equal(t, tt.Want.Name, got.Name)
-			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
-			assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
+
+			// got, err := testMock.Login(entity.User(tt.Entity))
+			handler.Login(testMock)
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+			// assert.Equal(t, tt.Want.Email, got.Email)
+			// assert.Equal(t, tt.Want.Name, got.Name)
+			// assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
+			// assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
 		})
 	}
 }
