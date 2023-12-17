@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -82,18 +83,17 @@ func TestUsecase(t *testing.T) {
 		IsAdmin:     0,
 		AccessToken: "Anything"}
 	e := echo.New()
-	// e.Use(middleware.Logger())
-	// e.Use(middleware.Recover())
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	//　mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
-	//  うまくいってるやつ
+
 	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(""))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	handler.LoginWithUsecase(testMock, c)
+	err := handler.LoginWithUsecase(testMock, c)
+	assert.NoError(t, err)
 }
 
 // 　見本
