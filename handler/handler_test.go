@@ -110,7 +110,7 @@ func TestLoginWithUsecase(t *testing.T) {
 		{
 			Description: "Nothingエラーによる不合致",
 			Entity:      `{"email":"","password":"","name":"","isAdmin":}`,
-			Want:        `{"email":"","name":"","isAdmin":0,"access_token":""}`,
+			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
 			WantErr:     true,
 		},
 	}
