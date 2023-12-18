@@ -3,8 +3,10 @@ package handler_test
 import (
 	"net/http"
 	"net/http/httptest"
+	reflect "reflect"
 	"strings"
 	"testing"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
@@ -14,6 +16,44 @@ import (
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/usecase"
 )
+
+func waitMockCall(t *testing.T, ctrl *gomock.Controller, timeout time.Duration) {
+	t.Helper()
+	called := false
+	done := make(chan interface{})
+
+	go func() {
+		time.Sleep(timeout)
+		close(done)
+	}()
+
+	for {
+		select {
+		case <-done:
+			break
+		default:
+		}
+
+		var c reflect.Value = reflect.ValueOf(ctrl).Elem()
+		var cs reflect.Value = c.FieldByName("expectedCalls").Elem()
+		i := cs.FieldByName("expected").MapRange()
+		called = true
+		for i.Next() {
+			calls := i.Value()
+			if calls.Len() != 0 {
+				called = false
+			}
+		}
+		if called {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	if !called {
+		t.Log("missed call in time")
+	}
+}
 
 // handler_testの実行
 func TestLogin(t *testing.T) {
@@ -66,6 +106,7 @@ func TestLogin(t *testing.T) {
 
 			// got, err := testMock.Login(entity.User(tt.Entity))
 			handler.Login(testMock)
+			waitMockCall(t, ctrl, 5*time.Second)
 			// if err != nil {
 			// 	log.Fatal(err)
 			// }
