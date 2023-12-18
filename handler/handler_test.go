@@ -114,6 +114,6 @@ func TestLoginWithUsecase(t *testing.T) {
 	c := e.NewContext(req, rec)
 	if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, resJSON, rec.Body.String())
+		assert.Equal(t, resJSON+"\n", rec.Body.String())
 	}
 }
