@@ -99,7 +99,19 @@ func TestLoginWithUsecase(t *testing.T) {
 			Description: "Emailエラーによる不合致",
 			Entity:      `{"email":"Emailは違うよ","password":"yamamo10","name":"山本真也","isAdmin":0}`,
 			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
-			WantErr:     false,
+			WantErr:     true,
+		},
+		{
+			Description: "Passwordエラーによる不合致",
+			Entity:      `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"Passwordは違うよ","name":"山本真也","isAdmin":0}`,
+			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
+			WantErr:     true,
+		},
+		{
+			Description: "Nothingエラーによる不合致",
+			Entity:      `{"email":"","password":"","name":"","isAdmin":}`,
+			Want:        `{"email":"","name":"","isAdmin":0,"access_token":""}`,
+			WantErr:     true,
 		},
 	}
 	var userEntity = entity.User{
@@ -132,11 +144,8 @@ func TestLoginWithUsecase(t *testing.T) {
 			if (err != nil) != tt.WantErr {
 				t.Errorf("LoginWithUsecase() error = %v, wantErr %v", err, tt.WantErr)
 			}
-
-			// if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
-			// 	assert.Equal(t, http.StatusOK, rec.Code)
-			// 	assert.Equal(t, tt.Want+"\n", rec.Body.String())
-			// }
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, tt.Want+"\n", rec.Body.String())
 		})
 	}
 }
