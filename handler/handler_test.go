@@ -82,8 +82,6 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
-			// // got, err := testMock.Login(entity.User(tt.Entity))
-			// handler.Login(testMock)
 			got, err := testMock.Login(entity.User(tt.Entity))
 			if (err != nil) != tt.WantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
