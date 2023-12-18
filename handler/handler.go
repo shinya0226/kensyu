@@ -23,9 +23,6 @@ func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　Loginの出力をmessageに格納
-	message, err := u.Login(*eu)
-	if err != nil {
-		return err
-	}
+	message, _ := u.Login(*eu)
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
