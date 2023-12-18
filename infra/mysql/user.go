@@ -20,10 +20,7 @@ const FixturesPathSQL = "../../testdata/fixtures"
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	//　fixture追加
 	u := entity.User{}
-	db, err := ConnectionDB()
-	if err != nil {
-		return u, err
-	}
+	db := ConnectionDB()
 	db.Close()
 	if err := ur.db.QueryRow("SELECT * FROM users where Email = ?", email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {

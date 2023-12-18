@@ -16,11 +16,8 @@ const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabse() {
-	db, err := ConnectionDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	db := ConnectionDB()
+	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,10 +71,7 @@ func TestFindSingleRow(t *testing.T) {
 
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			db, err := ConnectionDB()
-			if err != nil {
-				log.Fatal(err)
-			}
+			db := ConnectionDB()
 			//　fixtureの設定
 			prepareTestDatabse()
 			userRepo := NewUserRepository(db)
