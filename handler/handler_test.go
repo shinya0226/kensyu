@@ -111,12 +111,12 @@ func TestLoginWithUsecase(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	err := handler.LoginWithUsecase(testMock, c)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
-	// 	assert.Equal(t, http.StatusOK, rec.Code)
-	// 	assert.Equal(t, userResponse, rec.Body.String())
+	// err := handler.LoginWithUsecase(testMock, c)
+	// if err != nil {
+	// 	log.Fatal(err)
 	// }
+	if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, userResponse, rec.Body.String())
+	}
 }
