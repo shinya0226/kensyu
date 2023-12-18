@@ -98,7 +98,8 @@ func TestLoginWithUsecase(t *testing.T) {
 		AccessToken: "Anything"}
 
 	var (
-		userJSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10", "name":"山本真也","isAdmin":0}`
+		userREQ_JSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10", "name":"山本真也","isAdmin":0}`
+		userRES_JSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10", "name":"山本真也","isAdmin":0}`
 	)
 	e := echo.New()
 	ctrl := gomock.NewController(t)
@@ -107,16 +108,12 @@ func TestLoginWithUsecase(t *testing.T) {
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
 
-	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userJSON))
+	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(userREQ_JSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	// err := handler.LoginWithUsecase(testMock, c)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, userResponse, rec.Body.String())
+		assert.Equal(t, userRES_JSON, rec.Body.String())
 	}
 }
