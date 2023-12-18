@@ -65,15 +65,14 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
-
 			// got, err := testMock.Login(entity.User(tt.Entity))
 			handler.Login(testMock)
 			got, err := testMock.Login(userEntity)
 			if err != nil {
 				log.Fatal(err)
 			}
-			// if err != nil {
-			// 	log.Fatal(err)
+			// next := func(c echo.Context) error {
+			// 	return handler.LoginWithUsecase(testMock, c)
 			// }
 			assert.Equal(t, tt.Want.Email, got.Email)
 			assert.Equal(t, tt.Want.Name, got.Name)
@@ -84,6 +83,19 @@ func TestLogin(t *testing.T) {
 }
 
 func TestLoginWithUsecase(t *testing.T) {
+	testCase := []struct {
+		Description string
+		Entity      string //　入力
+		Want        string //　出力
+		WantErr     bool   //　エラーが出るときはtrue
+	}{
+		{
+			Description: "EmailとPasswordが両方合致",
+			Entity:      `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10","name":"山本真也","isAdmin":0}`,
+			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
+			WantErr:     false,
+		},
+	}
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
 		Password: "yamamo10",
@@ -97,23 +109,23 @@ func TestLoginWithUsecase(t *testing.T) {
 		IsAdmin:     0,
 		AccessToken: "Anything"}
 
-	var (
-		reqJSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10","name":"山本真也","isAdmin":0}`
-		resJSON = `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`
-	)
-	e := echo.New()
-	ctrl := gomock.NewController(t)
-	// defer ctrl.Finish()
-	//　mockの生成
-	testMock := handler.NewMockILoginUsecase(ctrl)
-	testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
+	for _, tt := range testCase {
+		t.Run(tt.Description, func(t *testing.T) {
+			e := echo.New()
+			ctrl := gomock.NewController(t)
+			//　mockの生成
+			testMock := handler.NewMockILoginUsecase(ctrl)
+			testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
 
-	req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(reqJSON))
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, resJSON+"\n", rec.Body.String())
+			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(tt.Entity))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+
+			if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
+				assert.Equal(t, http.StatusOK, rec.Code)
+				assert.Equal(t, tt.Want+"\n", rec.Body.String())
+			}
+		})
 	}
 }
