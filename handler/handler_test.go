@@ -95,6 +95,12 @@ func TestLoginWithUsecase(t *testing.T) {
 			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
 			WantErr:     false,
 		},
+		{
+			Description: "Emailエラーによる不合致",
+			Entity:      `{"email":"Emailは違うよ","password":"yamamo10","name":"山本真也","isAdmin":0}`,
+			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
+			WantErr:     false,
+		},
 	}
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
