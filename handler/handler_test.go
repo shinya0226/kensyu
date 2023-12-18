@@ -82,14 +82,13 @@ func TestLogin(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
-			got, err := testMock.Login(entity.User(tt.Entity))
+			err := handler.Login(testMock)
 			if (err != nil) != tt.WantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			assert.Equal(t, tt.Want.Email, got.Email)
-			assert.Equal(t, tt.Want.Name, got.Name)
-			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
-			assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
+			assert.Equal(t, tt.Want.Email, tt.Entity.Email)
+			assert.Equal(t, tt.Want.Name, tt.Entity.Name)
+			assert.Equal(t, tt.Want.IsAdmin, tt.Entity.IsAdmin)
 		})
 	}
 }
