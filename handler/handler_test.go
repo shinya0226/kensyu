@@ -102,7 +102,7 @@ func TestLoginWithUsecase(t *testing.T) {
 	)
 	e := echo.New()
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	// defer ctrl.Finish()
 	//　mockの生成
 	testMock := handler.NewMockILoginUsecase(ctrl)
 	testMock.EXPECT().Login(userEntity).Return(userResponse, nil).AnyTimes()
