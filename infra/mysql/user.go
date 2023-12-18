@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/shinya0226/kensyu/entity"
 )
@@ -19,7 +20,10 @@ const FixturesPathSQL = "../../testdata/fixtures"
 
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	//　fixture追加
-	db := ConnectionDB()
+	db, err := ConnectionDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 	db.Close()
 	u := entity.User{}
 	if err := ur.db.QueryRow("SELECT * FROM users where Email = ?", email).
