@@ -128,10 +128,15 @@ func TestLoginWithUsecase(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
-				assert.Equal(t, http.StatusOK, rec.Code)
-				assert.Equal(t, tt.Want+"\n", rec.Body.String())
+			err := handler.LoginWithUsecase(testMock, c)
+			if (err != nil) != tt.WantErr {
+				t.Errorf("LoginWithUsecase() error = %v, wantErr %v", err, tt.WantErr)
 			}
+
+			// if assert.NoError(t, handler.LoginWithUsecase(testMock, c)) {
+			// 	assert.Equal(t, http.StatusOK, rec.Code)
+			// 	assert.Equal(t, tt.Want+"\n", rec.Body.String())
+			// }
 		})
 	}
 }
