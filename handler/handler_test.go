@@ -44,6 +44,24 @@ func TestLogin(t *testing.T) {
 			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
 			WantErr:     false,
 		},
+		{
+			Description: "Emailエラーによる不合致",
+			Entity:      user{"Emailは違うよ", "yamamo10", "山本真也", 0},
+			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
+			WantErr:     true,
+		},
+		{
+			Description: "Passwordエラーによる不合致",
+			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
+			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
+			WantErr:     true,
+		},
+		{
+			Description: "Nothingエラーによる不合致",
+			Entity:      user{"", "", "", 0},
+			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "山本真也", 0, "Anything"},
+			WantErr:     true,
+		},
 	}
 	var userEntity = entity.User{
 		Email:    "shinya.yamamoto6@persol-pt.co.jp",
