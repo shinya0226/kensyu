@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -66,13 +68,17 @@ func TestLogin(t *testing.T) {
 
 			// got, err := testMock.Login(entity.User(tt.Entity))
 			handler.Login(testMock)
+			got, err := testMock.Login(userEntity)
+			if err != nil {
+				log.Fatal(err)
+			}
 			// if err != nil {
 			// 	log.Fatal(err)
 			// }
-			// assert.Equal(t, tt.Want.Email, got.Email)
-			// assert.Equal(t, tt.Want.Name, got.Name)
-			// assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
-			// assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
+			assert.Equal(t, tt.Want.Email, got.Email)
+			assert.Equal(t, tt.Want.Name, got.Name)
+			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
+			assert.Equal(t, tt.Want.AccessToken, got.AccessToken)
 		})
 	}
 }
