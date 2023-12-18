@@ -8,12 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// パスワードの暗号化（DBからパスワードを取り出す時に使用）
-func HashPassword(rawPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
-	return string(hashedPassword), err
-}
-
 // 暗号化されたパスワードとユーザーが入力したパスワードの比較
 func VerifyPassword(hashedPassword string, entryPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(entryPassword))
@@ -35,15 +29,4 @@ func CreateToken(email string) (string, error) {
 		return "", err
 	}
 	return tokenString, err
-}
-
-// JWTの検証
-func VerifyToken(tokenString string) (*jwt.Token, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
-	if err != nil {
-		return token, err
-	}
-	return token, err
 }

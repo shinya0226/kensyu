@@ -67,7 +67,6 @@ func TestLogin(t *testing.T) {
 			if err != nil {
 				log.Fatal(err)
 			}
-
 			userRepo := NewUserRepository(db)
 			loginUsecase := usecase.NewLoginUsecase(userRepo)
 			got, err := loginUsecase.Login(entity.User(tt.Entity))

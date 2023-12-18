@@ -17,13 +17,10 @@ func main() {
 	e.Use(middleware.Recover())
 
 	db := mysql.ConnectionDB()
-
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	// ルートを設定
-	e.GET("/", handler.Hello)
-
 	e.POST("/login", handler.Login(loginUsecase))
 
 	// サーバーをポート番号8080で起動
