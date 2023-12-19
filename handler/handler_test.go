@@ -62,7 +62,8 @@ func TestLoginWithUsecase(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			err := handler.LoginWithUsecase(testMock, c)
+			h := handler.Login(testMock)
+			err := h(c)
 			assert.Equal(t, err != nil, tt.WantErr)
 		})
 	}

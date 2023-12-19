@@ -12,12 +12,12 @@ import (
 // ログイン処理（機能）
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return LoginWithUsecase(u, c)
+		return loginWithUsecase(u, c)
 	}
 }
 
 // ログイン処理（詳細）
-func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
+func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
 	if err := c.Bind(eu); err != nil {
 		return err
