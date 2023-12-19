@@ -15,7 +15,7 @@ import (
 const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
-func prepareTestDatabse() {
+func prepareTestDatabase() {
 	db := ConnectionDB()
 	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
@@ -73,7 +73,7 @@ func TestFindSingleRow(t *testing.T) {
 		t.Run(tt.Description, func(t *testing.T) {
 			db := ConnectionDB()
 			//　fixtureの設定
-			prepareTestDatabse()
+			prepareTestDatabase()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 

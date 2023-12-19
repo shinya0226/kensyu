@@ -36,7 +36,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	logfo.Email = found.Email
 
 	//　Passwordの合致確認
-	err = VerifyPassword(found.Password, e.Password)
+	err = verifyPassword(found.Password, e.Password)
 	if err != nil {
 		return logfo, err
 	}
@@ -44,7 +44,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	logfo.IsAdmin = found.IsAdmin
 
 	//　JWTの作成
-	jwtMessage, _ := CreateToken(e.Email)
+	jwtMessage, _ := createToken(e.Email)
 	//　出力の型を定義
 	logfo.AccessToken = jwtMessage
 

@@ -9,13 +9,13 @@ import (
 )
 
 // 暗号化されたパスワードとユーザーが入力したパスワードの比較
-func VerifyPassword(hashedPassword string, entryPassword string) error {
+func verifyPassword(hashedPassword string, entryPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(entryPassword))
 	return err
 }
 
 // JWTの発行
-func CreateToken(email string) (string, error) {
+func createToken(email string) (string, error) {
 	//　tokenの作成
 	token := jwt.New(jwt.GetSigningMethod("HS256"))
 	//　Claimsの設定
