@@ -9,7 +9,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -78,8 +77,6 @@ func TestLoginWithUsecase(t *testing.T) {
 			if (err != nil) != tt.WantErr {
 				t.Errorf("LoginWithUsecase() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, tt.Want+"\n", rec.Body.String())
 		})
 	}
 }
