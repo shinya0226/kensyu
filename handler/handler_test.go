@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -18,43 +19,43 @@ import (
 )
 
 func TestLoginWithUsecase(t *testing.T) {
-	var userEntity = entity.User{
-		Email:    "shinya.yamamoto6@persol-pt.co.jp",
-		Password: "yamamo10",
-		Name:     "山本真也",
-		IsAdmin:  0}
+	// var userEntity = entity.User{
+	// 	Email:    "shinya.yamamoto6@persol-pt.co.jp",
+	// 	Password: "yamamo10",
+	// 	Name:     "山本真也",
+	// 	IsAdmin:  0}
 
-	// Login()の出力
-	var userResponse = usecase.LoginFormat{
-		Email:       "shinya.yamamoto6@persol-pt.co.jp",
-		Name:        "山本真也",
-		IsAdmin:     0,
-		AccessToken: "Anything"}
+	// // Login()の出力
+	// var userResponse = usecase.LoginFormat{
+	// 	Email:       "shinya.yamamoto6@persol-pt.co.jp",
+	// 	Name:        "山本真也",
+	// 	IsAdmin:     0,
+	// 	AccessToken: "Anything"}
 
 	testCase := []struct {
 		Description string
 		Usecase     func(testMock *handler.MockILoginUsecase)
-		Entity      string //　入力
-		Want        string //　出力
-		WantErr     bool   //　エラーが出るときはtrue
+		Entity      entity.User         //　入力
+		Want        usecase.LoginFormat //　出力
+		WantErr     bool                //　エラーが出るときはtrue
 		WantCode    int
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
-			Entity:      `{"email":"shinya.yamamoto6@persol-pt.co.jp","password":"yamamo10","name":"山本真也","isAdmin":0}`,
-			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
+			Entity:      entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10"},
+			Want:        usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(userEntity).Return(userResponse, nil)
+				testMock.EXPECT().Login(entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10"}).Return(usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
 			},
 			WantErr:  false,
 			WantCode: http.StatusOK,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
-			Entity:      `{"email":"","password":"","name":"","isAdmin":}`,
-			Want:        `{"email":"shinya.yamamoto6@persol-pt.co.jp","name":"山本真也","isAdmin":0,"access_token":"Anything"}`,
+			Entity:      entity.User{Email: "", Password: ""},
+			// Want:usecase.LoginFormat{Email: "",Name: "",IsAdmin: 0,AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(userEntity).Return(nil, errors.New("Nothingエラー"))
+				testMock.EXPECT().Login(entity.User{Email: "", Password: ""}).Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
 			},
 			WantErr:  true,
 			WantCode: http.StatusBadRequest,
@@ -70,16 +71,18 @@ func TestLoginWithUsecase(t *testing.T) {
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			//　Usecase test
 			tt.Usecase(testMock)
+			var entity entity.User
+			v, err := json.Marshal(entity)
 
-			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(tt.Entity))
+			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(string(v)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 			//　Login test
 			h := handler.Login(testMock)
-			err := h(c)
+			err = h(c)
 			assert.Equal(t, err != nil, tt.WantErr)
-			assert.Equal(t, rec.Code, tt.WantErr)
+			assert.Equal(t, rec.Code, tt.WantCode)
 		})
 	}
 }
