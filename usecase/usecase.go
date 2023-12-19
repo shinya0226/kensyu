@@ -15,7 +15,7 @@ func verifyPassword(hashedPassword string, entryPassword string) error {
 }
 
 // JWTの発行
-func createToken(email string) (string, error) {
+func createToken(email string) string {
 	//　tokenの作成
 	token := jwt.New(jwt.GetSigningMethod("HS256"))
 	//　Claimsの設定
@@ -25,5 +25,5 @@ func createToken(email string) (string, error) {
 	}
 	//　署名
 	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-	return tokenString, nil
+	return tokenString
 }
