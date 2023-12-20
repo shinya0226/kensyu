@@ -3,6 +3,7 @@ package handler_test
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -30,9 +31,11 @@ func TestLoginWithUsecase(t *testing.T) {
 		{
 			Description: "EmailとPasswordが両方合致",
 			Entity:      entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10", Name: "", IsAdmin: 0},
-			Want:        usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"},
+			Want: usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0,
+				AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10", Name: "山本真也", IsAdmin: 0}).Return(usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
+				testMock.EXPECT().Login(entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10", Name: "山本真也", IsAdmin: 0}).
+					Return(usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
 			},
 			WantErr:  false,
 			WantCode: http.StatusOK,
@@ -43,7 +46,8 @@ func TestLoginWithUsecase(t *testing.T) {
 			Want:        usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""},
 			// Want:usecase.LoginFormat{Email: "",Name: "",IsAdmin: 0,AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(entity.User{Email: "", Password: "", Name: "", IsAdmin: 0}).Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
+				testMock.EXPECT().Login(entity.User{Email: "", Password: "", Name: "", IsAdmin: 0}).
+					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
 			},
 			WantErr:  true,
 			WantCode: http.StatusBadRequest,
@@ -57,11 +61,12 @@ func TestLoginWithUsecase(t *testing.T) {
 			ctrl.Finish()
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
-			//　Usecase test
 			tt.Usecase(testMock)
 			var entity entity.User
 			v, err := json.Marshal(entity)
-
+			if err != nil {
+				log.Fatal(err)
+			}
 			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(string(v)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
