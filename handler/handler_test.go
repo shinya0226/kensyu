@@ -22,6 +22,7 @@ import (
 func TestLoginWithUsecase(t *testing.T) {
 	email := "shinya.yamamoto6@persol-pt.co.jp"
 	pass := "yamamo10"
+	name := "山本真也"
 	testCase := []struct {
 		Description string
 		Usecase     func(testMock *handler.MockILoginUsecase)
@@ -33,11 +34,11 @@ func TestLoginWithUsecase(t *testing.T) {
 		{
 			Description: "EmailとPasswordが両方合致",
 			Entity:      entity.User{Email: email, Password: pass, Name: "", IsAdmin: 0},
-			Want: usecase.LoginFormat{Email: email, Name: "山本真也", IsAdmin: 0,
+			Want: usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0,
 				AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(entity.User{Email: email, Password: pass, Name: "山本真也", IsAdmin: 0}).
-					Return(usecase.LoginFormat{Email: email, Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
+				testMock.EXPECT().Login(entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0}).
+					Return(usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0, AccessToken: "Anything"}, nil)
 			},
 			WantErr:  false,
 			WantCode: http.StatusOK,
