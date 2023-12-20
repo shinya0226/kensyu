@@ -19,19 +19,6 @@ import (
 )
 
 func TestLoginWithUsecase(t *testing.T) {
-	// var userEntity = entity.User{
-	// 	Email:    "shinya.yamamoto6@persol-pt.co.jp",
-	// 	Password: "yamamo10",
-	// 	Name:     "山本真也",
-	// 	IsAdmin:  0}
-
-	// // Login()の出力
-	// var userResponse = usecase.LoginFormat{
-	// 	Email:       "shinya.yamamoto6@persol-pt.co.jp",
-	// 	Name:        "山本真也",
-	// 	IsAdmin:     0,
-	// 	AccessToken: "Anything"}
-
 	testCase := []struct {
 		Description string
 		Usecase     func(testMock *handler.MockILoginUsecase)
@@ -42,20 +29,21 @@ func TestLoginWithUsecase(t *testing.T) {
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
-			Entity:      entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10"},
+			Entity:      entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10", Name: "", IsAdmin: 0},
 			Want:        usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10"}).Return(usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
+				testMock.EXPECT().Login(entity.User{Email: "shinya.yamamoto6@persol-pt.co.jp", Password: "yamamo10", Name: "山本真也", IsAdmin: 0}).Return(usecase.LoginFormat{Email: "shinya.yamamoto6@persol-pt.co.jp", Name: "山本真也", IsAdmin: 0, AccessToken: "Anything"}, nil)
 			},
 			WantErr:  false,
 			WantCode: http.StatusOK,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
-			Entity:      entity.User{Email: "", Password: ""},
+			Entity:      entity.User{Email: "", Password: "", Name: "", IsAdmin: 0},
+			Want:        usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""},
 			// Want:usecase.LoginFormat{Email: "",Name: "",IsAdmin: 0,AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
-				testMock.EXPECT().Login(entity.User{Email: "", Password: ""}).Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
+				testMock.EXPECT().Login(entity.User{Email: "", Password: "", Name: "", IsAdmin: 0}).Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
 			},
 			WantErr:  true,
 			WantCode: http.StatusBadRequest,
@@ -81,8 +69,8 @@ func TestLoginWithUsecase(t *testing.T) {
 			//　Login test
 			h := handler.Login(testMock)
 			err = h(c)
-			assert.Equal(t, err != nil, tt.WantErr)
-			assert.Equal(t, rec.Code, tt.WantCode)
+			assert.Equal(t, tt.WantErr, err != nil)
+			assert.Equal(t, tt.WantCode, rec.Code)
 		})
 	}
 }
