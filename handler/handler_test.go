@@ -1,12 +1,12 @@
 package handler_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -19,7 +19,7 @@ import (
 	"github.com/shinya0226/kensyu/usecase"
 )
 
-func TestLoginWithUsecase(t *testing.T) {
+func TestLogin(t *testing.T) {
 	email := "shinya.yamamoto6@persol-pt.co.jp"
 	pass := "yamamo10"
 	name := "山本真也"
@@ -44,16 +44,37 @@ func TestLoginWithUsecase(t *testing.T) {
 			WantCode: http.StatusOK,
 		},
 		{
+			Description: "Emailエラーによる不合致",
+			Entity:      entity.User{Email: "Emailは違うよ", Password: pass, Name: name, IsAdmin: 0},
+			Want:        usecase.LoginFormat{},
+			Usecase: func(testMock *handler.MockILoginUsecase) {
+				testMock.EXPECT().Login(entity.User{Email: "Emailは違うよ", Password: pass, Name: name, IsAdmin: 0}).
+					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Email error"))
+			},
+			WantErr:  true,
+			WantCode: http.StatusOK,
+		},
+		{
+			Description: "Passwordエラーによる不合致",
+			Entity:      entity.User{Email: email, Password: "Passwordは違うよ", Name: name, IsAdmin: 0},
+			Want:        usecase.LoginFormat{},
+			Usecase: func(testMock *handler.MockILoginUsecase) {
+				testMock.EXPECT().Login(entity.User{Email: email, Password: "Passwordは違うよ", Name: name, IsAdmin: 0}).
+					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Password error"))
+			},
+			WantErr:  true,
+			WantCode: http.StatusOK,
+		},
+		{
 			Description: "Nothingエラーによる不合致",
 			Entity:      entity.User{Email: "", Password: "", Name: "", IsAdmin: 0},
-			Want:        usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""},
-			// Want:usecase.LoginFormat{Email: "",Name: "",IsAdmin: 0,AccessToken: "Anything"},
+			Want:        usecase.LoginFormat{},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
 				testMock.EXPECT().Login(entity.User{Email: "", Password: "", Name: "", IsAdmin: 0}).
 					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
 			},
-			WantErr:  true,
-			WantCode: http.StatusBadRequest,
+			WantErr:  false,
+			WantCode: http.StatusNotFound,
 		},
 	}
 
@@ -65,19 +86,20 @@ func TestLoginWithUsecase(t *testing.T) {
 			//　mockの生成
 			testMock := handler.NewMockILoginUsecase(ctrl)
 			tt.Usecase(testMock)
-			var entity entity.User
-			v, err := json.Marshal(entity)
+			v, err := json.Marshal(tt.Entity)
 			if err != nil {
 				log.Fatal(err)
 			}
-			req := httptest.NewRequest(http.MethodPost, "/login", strings.NewReader(string(v)))
+			req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewReader(v))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 			//　Login test
 			h := handler.Login(testMock)
 			err = h(c)
-			assert.Equal(t, tt.WantErr, err != nil)
+			if (err != nil) != tt.WantErr {
+				t.Errorf("Login() error = %v, wantErr %v", err, tt.WantErr)
+			}
 			assert.Equal(t, tt.WantCode, rec.Code)
 		})
 	}

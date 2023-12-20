@@ -24,21 +24,21 @@ type LoginFormat struct {
 }
 
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
-	//　該当するユーザーを抽出（found）
-	found, err := u.repo.FindSingleRow(e.Email)
-
 	//　出力の型を定義
 	logfo := LoginFormat{}
+	//　該当するユーザーを抽出（found）
+	found, err := u.repo.FindSingleRow(e.Email)
 	//　Emailの合致確認
 	if err != nil {
-		return logfo, err
+		return LoginFormat{}, err
 	}
+
 	logfo.Email = found.Email
 
 	//　Passwordの合致確認
 	err = verifyPassword(found.Password, e.Password)
 	if err != nil {
-		return logfo, err
+		return LoginFormat{}, err
 	}
 	logfo.Name = found.Name
 	logfo.IsAdmin = found.IsAdmin
