@@ -33,7 +33,7 @@ func TestLoginWithUsecase(t *testing.T) {
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
-			Entity:      entity.User{Email: email, Password: pass, Name: "", IsAdmin: 0},
+			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
 			Want: usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0,
 				AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
