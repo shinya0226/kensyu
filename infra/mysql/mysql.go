@@ -1,9 +1,10 @@
 package mysql
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
+
+	"database/sql"
 )
 
 func ConnectionDB() *sql.DB {
