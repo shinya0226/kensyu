@@ -1,6 +1,7 @@
 package mysql_test
 
 import (
+	"database/sql"
 	"log"
 	"testing"
 
@@ -16,8 +17,12 @@ const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabase() {
-	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	//　db := ConnectionDB()
+	db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
+	if err != nil {
+		return
+	}
+	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}

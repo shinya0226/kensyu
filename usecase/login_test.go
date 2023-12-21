@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"database/sql"
 	"log"
 	"testing"
 
@@ -61,9 +62,13 @@ func TestLogin(t *testing.T) {
 	//　DB接続
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			db := ConnectionDB()
+			//　db := ConnectionDB()
+			db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
+			if err != nil {
+				log.Fatal(err)
+			}
 			//　fixtureの設定
-			err := testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
+			err = testfixtures.LoadFixtures("../testdata/fixtures", db, &testfixtures.MySQLHelper{})
 			if err != nil {
 				log.Fatal(err)
 			}
