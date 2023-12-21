@@ -63,10 +63,8 @@ jobs:
           MYSQL_PASSWORD: atspass
           MYSQL_ROOT_PASSWORD: atspass
           MYSQL_DATABASE: kensyu_testing
-          MYSQL_ROOT_HOST: '%'
-          MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
         command:
-          [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]
+          ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]
 
     steps:
       - attach_workspace:

@@ -16,16 +16,19 @@ import (
 const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
-func prepareTestDatabase() {
+func prepareTestDatabase() *sql.DB {
 	//　db := ConnectionDB()
-	db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
-	if err != nil {
-		return
-	}
-	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
+	//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
+	//if err != nil {
+	//	return nil
+	//}
+	db := ConnectionDB()
+	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}
+	return db
 }
 
 // Emailのみの合致確認
