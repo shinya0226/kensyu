@@ -12,7 +12,6 @@ import (
 	"gopkg.in/testfixtures.v1"
 )
 
-// fixtureのファイルパス
 const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
