@@ -332,6 +332,7 @@ issues:
       linters: [ gocritic ]
     - path: "_test\\.go"
       linters:
+        - goimports
         - bodyclose
         - dupl
         - funlen
