@@ -206,6 +206,7 @@ linters-settings:
 linters:
   disable-all: true
   enable:
+    - goimports
     ## enabled by default
     - errcheck # checking for unchecked errors, these unchecked errors can be critical bugs in some cases
     - gosimple # specializes in simplifying a code
