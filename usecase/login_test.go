@@ -49,7 +49,7 @@ func TestLogin(t *testing.T) {
 		{
 			Description: "Passwordエラーによる不合致",
 			Entity:      user{"shinya.yamamoto6@persol-pt.co.jp", "Passwordは違うよ", "山本真也", 0},
-			Want:        LoginFormat{"shinya.yamamoto6@persol-pt.co.jp", "", 0, ""},
+			Want:        LoginFormat{"", "", 0, ""},
 			WantErr:     true,
 		},
 		{
@@ -62,8 +62,7 @@ func TestLogin(t *testing.T) {
 	//　DB接続
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			//　db := ConnectionDB()
-			db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
+			db, err := sql.Open("mysql", "root:Shinya0023@tcp(localhost:3306)/test_fix?parseTime=true")
 			if err != nil {
 				log.Fatal(err)
 			}

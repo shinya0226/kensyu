@@ -17,14 +17,11 @@ const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabase() *sql.DB {
-	//　db := ConnectionDB()
-	//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
-	//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
-	//if err != nil {
-	//	return nil
-	//}
-	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	db, err := sql.Open("mysql", "root:Shinya0023@tcp(localhost:3306)/test_fix?parseTime=true")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}
