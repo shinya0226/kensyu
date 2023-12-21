@@ -1,4 +1,4 @@
-version: 2.1
+version: 3.0
 defaults: &defaults
   working_directory: /go/src/github.com/shinya0226/kensyu/
   docker:
