@@ -17,10 +17,6 @@ const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabase() *sql.DB {
-	//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
 	db := ConnectionDB()
 	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
@@ -80,13 +76,6 @@ func TestFindSingleRow(t *testing.T) {
 
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			//db, err := sql.Open("mysql", "root:Shinya0023@tcp(localhost:3306)/test_fix?parseTime=true")
-			//db, err := sql.Open("mysql", "atsuser:atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")
-			//if err != nil {
-			//	log.Fatal(err)
-			//}
-			//db:=ConnectionDB()
-			//　fixtureの設定
 			db := prepareTestDatabase()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
