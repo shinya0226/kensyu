@@ -2,6 +2,8 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
+	"os"
 )
 
 func ConnectionDB() *sql.DB {
@@ -11,6 +13,8 @@ func ConnectionDB() *sql.DB {
 	//　host := os.Getenv("DB_HOST")
 	//　port := os.Getenv("DB_PORT")
 	//　name := os.Getenv("DB_NAME")
+	table := os.Getenv("DB_TABLE")
+	log.Fatal(table)
 	//　DB読み込み
 	//　dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, pass, host, port, name)
 	db, _ := sql.Open("mysql", "atspass@tcp(localhost:3306)/kensyu_testing?parseTime=true")

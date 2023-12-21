@@ -25,7 +25,10 @@ func prepareTestDatabase() {
 
 // Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
+	const email = "shinya.yamamoto6@persol-pt.co.jp"
 	const pass = "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1zVDAS"
+	const name = "山本真也"
+
 	type user struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -43,7 +46,7 @@ func TestFindSingleRow(t *testing.T) {
 			Description: "EmailとPasswordが両方合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
 			Password:    "yamamo10",
-			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", pass, "山本真也", 0},
+			Want:        user{email, pass, name, 0},
 			WantErr:     false,
 		},
 		{
@@ -57,7 +60,7 @@ func TestFindSingleRow(t *testing.T) {
 			Description: "Passwordエラーによる不合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
 			Password:    "Passwordは違うよ",
-			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", pass, "山本真也", 0},
+			Want:        user{email, pass, name, 0},
 			WantErr:     false,
 		},
 		{
