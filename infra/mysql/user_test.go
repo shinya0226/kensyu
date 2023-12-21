@@ -1,9 +1,10 @@
 package mysql_test
 
 import (
-	"database/sql"
 	"log"
 	"testing"
+
+	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"

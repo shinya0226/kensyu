@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/shinya0226/kensyu/entity"
+
+	"database/sql"
 )
 
 type userRepository struct {

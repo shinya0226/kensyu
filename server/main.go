@@ -12,7 +12,6 @@ func main() {
 	// インスタンスを作成
 	e := echo.New()
 
-	// ミドルウェアを設定
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
