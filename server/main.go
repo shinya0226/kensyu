@@ -45,17 +45,25 @@ type AdminFormat struct {
 
 func restricted(c echo.Context) error {
 	// JWT認証
-	token, err := c.Get("user").(*jwt.Token)
-	if err != true {
-		return
-	}
-	_, err = usecase.verifyToken(token.Raw)
-	if err != true {
-		return
+	token, _ := c.Get("user").(*jwt.Token)
+	_, err := verifyToken(token.Raw)
+	if err != nil {
+		return err
 	}
 	logfo := usecase.LoginFormat{}
 	if logfo.IsAdmin != 1 {
 		return c.String(http.StatusBadRequest, "isAdmin認証NG")
 	}
 	return c.String(http.StatusOK, "認証OK")
+}
+
+// JWTの検証
+func verifyToken(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv(os.Getenv("JWT_SECRET"))), nil
+	})
+	if err != nil {
+		return token, err
+	}
+	return token, err
 }

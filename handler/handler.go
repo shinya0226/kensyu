@@ -62,11 +62,7 @@ func GetAccounts() echo.HandlerFunc {
 		pageFirst := (i - 1)
 		pageFirst *= 5
 
-		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
-		rows.Close()
-		if rows.Err() != nil {
-			return err
-		}
+		rows, _ := db.Query("select * from users LIMIT ?,5", pageFirst)
 		for rows.Next() {
 			err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
 			if err != nil {
