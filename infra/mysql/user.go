@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-
 	"github.com/shinya0226/kensyu/entity"
 )
 
