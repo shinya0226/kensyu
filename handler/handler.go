@@ -1,14 +1,13 @@
 package handler
 
 import (
-	"github.com/shinya0226/kensyu/usecase"
 	"net/http"
 	"strconv"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
+	"github.com/shinya0226/kensyu/usecase"
 )
 
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
