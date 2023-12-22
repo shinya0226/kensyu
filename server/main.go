@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
+	"github.com/shinya0226/kensyu/entity"
 	"net/http"
 	"os"
 
@@ -24,7 +25,7 @@ func main() {
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
-	e.POST("/login", handler.Login(loginUsecase))
+	e.POST("/login", Login(loginUsecase))
 
 	r := e.Group("/restricted")
 	config := echojwt.Config{
@@ -40,6 +41,30 @@ func main() {
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
+func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return loginWithUsecase(u, c)
+	}
+}
+
+var logfo usecase.LoginFormat
+
+func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
+	eu := new(entity.User)
+	if err := c.Bind(eu); err != nil {
+		return err
+	}
+	//　Loginの出力をmessageに格納
+	if eu.Email == "" || eu.Password == "" {
+		return c.String(http.StatusNotFound, "入力値は見つかりません")
+	}
+	message, err := u.Login(*eu)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, message) //　structに詰める
+}
+
 type AdminFormat struct {
 	IsAdmin int `json:"isAdmin"`
 }
@@ -51,7 +76,6 @@ func restricted(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	logfo := usecase.LoginFormat{}
 	if logfo.IsAdmin != 1 {
 		return c.String(http.StatusBadRequest, "isAdmin認証NG")
 	}

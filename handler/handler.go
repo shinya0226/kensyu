@@ -1,31 +1,20 @@
 package handler
 
 import (
+	"github.com/shinya0226/kensyu/usecase"
 	"net/http"
 	"strconv"
 
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo/v4"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
-	"github.com/shinya0226/kensyu/usecase"
-
-	"github.com/labstack/echo/v4"
 )
-
-type AdminFormat struct {
-	IsAdmin int `json:"isAdmin"`
-}
 
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return loginWithUsecase(u, c)
 	}
-}
-
-type LoginFormat struct {
-	Email       string `json:"email"`
-	Name        string `json:"name"`
-	IsAdmin     int    `json:"isAdmin"`
-	AccessToken string `json:"access_token"`
 }
 
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
@@ -42,6 +31,10 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, message) //　structに詰める
+}
+
+type AdminFormat struct {
+	IsAdmin int `json:"isAdmin"`
 }
 
 func GetAccounts() echo.HandlerFunc {
