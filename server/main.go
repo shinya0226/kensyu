@@ -2,16 +2,15 @@ package main
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/labstack/echo/v4"
-	"github.com/shinya0226/kensyu/entity"
-	"net/http"
-	"os"
-
 	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
+	"net/http"
+	"os"
 )
 
 func main() {
@@ -47,8 +46,6 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	}
 }
 
-var logfo usecase.LoginFormat
-
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
 	if err := c.Bind(eu); err != nil {
@@ -70,6 +67,7 @@ type AdminFormat struct {
 }
 
 func restricted(c echo.Context) error {
+	var logfo usecase.LoginFormat
 	// JWT認証
 	token, _ := c.Get("user").(*jwt.Token)
 	_, err := verifyToken(token.Raw)
