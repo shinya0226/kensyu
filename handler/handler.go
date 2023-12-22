@@ -66,8 +66,8 @@ func GetAccounts() echo.HandlerFunc {
 		}
 		defer rows.Close()
 		for rows.Next() {
-			err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
-			if err != nil {
+			err2 := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
+			if err2 != nil {
 				return err
 			}
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
