@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strconv"
 
@@ -34,6 +35,20 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 
 type AdminFormat struct {
 	IsAdmin int `json:"isAdmin"`
+}
+
+func Restricted(c echo.Context) error {
+	var logfo usecase.LoginFormat
+	// JWT認証
+	token, _ := c.Get("user").(*jwt.Token)
+	_, err := usecase.VerifyToken(token.Raw)
+	if err != nil {
+		return err
+	}
+	if logfo.IsAdmin != 1 {
+		return c.String(http.StatusBadRequest, "isAdmin認証NG")
+	}
+	return c.String(http.StatusOK, "認証OK")
 }
 
 func GetAccounts() echo.HandlerFunc {
