@@ -28,7 +28,7 @@ func createToken(email string) string {
 }
 
 // JWTの検証
-func VerifyToken(tokenString string) (*jwt.Token, error) {
+func verifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv(os.Getenv("JWT_SECRET"))), nil
 	})

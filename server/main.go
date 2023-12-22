@@ -45,13 +45,13 @@ type AdminFormat struct {
 
 func restricted(c echo.Context) error {
 	// JWT認証
-	token := c.Get("user").(*jwt.Token)
-	if token == nil {
-		return nil
+	token, err := c.Get("user").(*jwt.Token)
+	if err != true {
+		return
 	}
-	_, err := usecase.VerifyToken(token.Raw)
-	if err != nil {
-		return err
+	_, err = usecase.verifyToken(token.Raw)
+	if err != true {
+		return
 	}
 	logfo := usecase.LoginFormat{}
 	if logfo.IsAdmin != 1 {

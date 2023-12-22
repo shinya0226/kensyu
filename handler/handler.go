@@ -59,14 +59,17 @@ func GetAccounts() echo.HandlerFunc {
 		var i int
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
-		pageFirst := (5*i - 5)
+		pageFirst := (i - 1)
+		pageFirst *= 5
 
 		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
+		rows.Close()
 		if rows.Err() != nil {
 			return err
 		}
 		for rows.Next() {
-			if err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin); err != nil {
+			err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
+			if err != nil {
 				return err
 			}
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
