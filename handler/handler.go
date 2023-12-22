@@ -23,13 +23,11 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 }
 
 type LoginFormat struct {
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	IsAdmin      int    `json:"isAdmin"`
-	Access_token string `json:"access_token"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
 }
-
-var logfo LoginFormat
 
 // ログイン処理（詳細）
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
@@ -55,16 +53,16 @@ func GetAccounts() echo.HandlerFunc {
 
 		post := entity.User{}
 		posts := []*entity.User{}
-		//request page
+		//　request page
 		page := c.Param("page")
-		//int型に変換
+		//　int型に変換
 		var i int
 		i, _ = strconv.Atoi(page)
-		//読み込み開始のページの定義
-		var page_first int
-		page_first = (i - 1) * 5
+		//　読み込み開始のページの定義
+		var pageFirst int
+		pageFirst = (i - 1) * 5
 
-		rows, err := db.Query("select * from users LIMIT ?,5", page_first)
+		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
