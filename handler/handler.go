@@ -50,7 +50,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
-
+		db.Close()
 		post := entity.User{}
 		posts := []*entity.User{}
 		//　request page
@@ -68,10 +68,7 @@ func GetAccounts() echo.HandlerFunc {
 			return err
 		}
 		for rows.Next() {
-			err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
-			if err != nil {
-				return err
-			}
+			rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
 		}
 		return c.JSON(http.StatusOK, posts)
