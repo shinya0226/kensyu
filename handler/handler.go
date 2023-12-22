@@ -60,17 +60,21 @@ func GetAccounts() echo.HandlerFunc {
 		pageFirst := (i - 1)
 		pageFirst *= 5
 
-		rows, _ := db.Query("select * from users LIMIT ?,5", pageFirst)
-		defer rows.Close()
-		err := rows.Err()
+		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
+		defer rows.Close()
 		for rows.Next() {
-			if err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin); err != nil {
-				panic(err.Error())
+			err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin)
+			if err != nil {
+				return err
 			}
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
+		}
+		err = rows.Err()
+		if err != nil {
+			return err
 		}
 		return c.JSON(http.StatusOK, posts)
 	}
