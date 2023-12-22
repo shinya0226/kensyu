@@ -62,12 +62,12 @@ func GetAccounts() echo.HandlerFunc {
 		pageFirst := (5*i - 5)
 
 		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
-		if err != nil {
-			return nil
+		if rows.Err() != nil {
+			return err
 		}
 		for rows.Next() {
 			if err := rows.Scan(&post.Email, &post.Password, &post.Name, &post.IsAdmin); err != nil {
-				return nil
+				return err
 			}
 			posts = append(posts, &entity.User{Email: post.Email, Name: post.Name, IsAdmin: post.IsAdmin})
 		}

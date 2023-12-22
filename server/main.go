@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/infra/mysql"
-	. "github.com/shinya0226/kensyu/usecase"
+	"github.com/shinya0226/kensyu/usecase"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 
 	db := mysql.ConnectionDB()
 	userRepo := mysql.NewUserRepository(db)
-	loginUsecase := NewLoginUsecase(userRepo)
+	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	e.POST("/login", handler.Login(loginUsecase))
 	r := e.Group("/restricted")
@@ -46,11 +46,15 @@ type AdminFormat struct {
 func restricted(c echo.Context) error {
 	// JWT認証
 	token := c.Get("user").(*jwt.Token)
-	_, err := VerifyToken(token.Raw)
+	if token == nil {
+		return nil
+	}
+	_, err := usecase.VerifyToken(token.Raw)
 	if err != nil {
 		return err
 	}
-	if Logfo.IsAdmin != 1 {
+	logfo := usecase.LoginFormat{}
+	if logfo.IsAdmin != 1 {
 		return c.String(http.StatusBadRequest, "isAdmin認証NG")
 	}
 	return c.String(http.StatusOK, "認証OK")

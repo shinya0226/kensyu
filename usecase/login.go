@@ -24,7 +24,7 @@ type LoginFormat struct {
 	AccessToken string `json:"access_token"`
 }
 
-var Logfo LoginFormat
+var logfo LoginFormat
 
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	//　該当するユーザーを抽出（found）
@@ -34,18 +34,18 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 		return LoginFormat{}, err
 	}
 
-	Logfo.Email = found.Email
+	logfo.Email = found.Email
 
 	//　Passwordの合致確認
 	err = verifyPassword(found.Password, e.Password)
 	if err != nil {
 		return LoginFormat{}, err
 	}
-	Logfo.Name = found.Name
-	Logfo.IsAdmin = found.IsAdmin
+	logfo.Name = found.Name
+	logfo.IsAdmin = found.IsAdmin
 	//　JWTの作成
 	jwtMessage := createToken(e.Email)
 	//　出力の型を定義
-	Logfo.AccessToken = jwtMessage
-	return Logfo, nil
+	logfo.AccessToken = jwtMessage
+	return logfo, nil
 }
