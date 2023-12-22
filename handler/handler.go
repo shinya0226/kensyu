@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strconv"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
