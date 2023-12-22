@@ -8,14 +8,8 @@ import (
 	"github.com/shinya0226/kensyu/infra/mysql"
 	usecase "github.com/shinya0226/kensyu/usecase"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 )
-
-// 初期画面の表示
-func Hello(c echo.Context) error {
-	return c.String(http.StatusOK, "お仕事おつかれ様")
-}
 
 type AdminFormat struct {
 	IsAdmin int `json:"isAdmin"`
@@ -24,7 +18,7 @@ type AdminFormat struct {
 // ログイン処理（機能）
 func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return LoginWithUsecase(u, c)
+		return loginWithUsecase(u, c)
 	}
 }
 
@@ -38,25 +32,20 @@ type LoginFormat struct {
 var logfo LoginFormat
 
 // ログイン処理（詳細）
-func LoginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
+func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
-	// logfo := LoginFormat{}
-
 	if err := c.Bind(eu); err != nil {
 		return err
 	}
-	//Loginの出力をmessageに格納
-	response, err := u.Login(*eu)
+	//　Loginの出力をmessageに格納
+	if eu.Email == "" || eu.Name == "" || eu.Password == "" {
+		return c.String(http.StatusNotFound, "入力値は見つかりません")
+	}
+	message, err := u.Login(*eu)
 	if err != nil {
 		return err
 	}
-	//formatに追加
-	logfo.Email = response.Email
-	logfo.Name = response.Name
-	logfo.IsAdmin = response.IsAdmin
-	logfo.Access_token = response.Access_token
-
-	return c.JSON(http.StatusOK, logfo) //structに詰める
+	return c.JSON(http.StatusOK, message) //　structに詰める
 }
 
 // アカウント一覧取得
@@ -75,7 +64,7 @@ func GetAccounts() echo.HandlerFunc {
 		var page_first int
 		page_first = (i - 1) * 5
 
-		rows, err := db.Query("select * from user LIMIT ?,5", page_first)
+		rows, err := db.Query("select * from users LIMIT ?,5", page_first)
 		if err != nil {
 			return err
 		}

@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 	"net/http"
 	"os"
 
-	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
@@ -18,12 +18,10 @@ func main() {
 	// インスタンスを作成
 	e := echo.New()
 
-	// ミドルウェアを設定
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	db := mysql.ConnectionDB()
-
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
@@ -45,10 +43,8 @@ func main() {
 	//JWT認証
 	r.GET("", restricted)                           //http://localhost:8080/restricted
 	r.GET("/accounts/:page", handler.GetAccounts()) // http://localhost:8080/restricted/accounts/1
-
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
-
 }
 
 type AdminFormat struct {
