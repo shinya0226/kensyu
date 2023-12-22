@@ -111,7 +111,13 @@ func TestLogin(t *testing.T) {
 	}
 }
 
-//　func TestGetAccounts(t *testing.T) {
-//	e := echo.New()
-//	req := httptest.NewRequest(http.MethodGet,)
-//　}
+func TestRestricted(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/restricted", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	if assert.NoError(t, handler.Restricted(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+	}
+
+}
