@@ -6,7 +6,7 @@ import (
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
-	usecase "github.com/shinya0226/kensyu/usecase"
+	"github.com/shinya0226/kensyu/usecase"
 
 	"github.com/labstack/echo/v4"
 )
@@ -34,9 +34,9 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　Loginの出力をmessageに格納
-	//if eu.Email == "" || eu.Password == "" {
-	//	return c.String(http.StatusNotFound, "入力値は見つかりません")
-	//}
+	if eu.Email == "" || eu.Password == "" {
+		return c.String(http.StatusNotFound, "入力値は見つかりません")
+	}
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
@@ -44,7 +44,6 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
 
-// アカウント一覧取得
 func GetAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()

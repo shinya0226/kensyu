@@ -1,9 +1,8 @@
 package mysql
 
 import (
-	"github.com/shinya0226/kensyu/entity"
-
 	"database/sql"
+	"github.com/shinya0226/kensyu/entity"
 )
 
 type userRepository struct {
@@ -15,7 +14,6 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 }
 
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
-	//　fixture追加
 	u := entity.User{}
 	if err := ur.db.QueryRow("SELECT * FROM user WHERE Email = ?", email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
