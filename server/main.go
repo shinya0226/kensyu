@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-
 	"net/http"
 	"os"
 
@@ -26,6 +25,7 @@ func main() {
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	e.POST("/login", handler.Login(loginUsecase))
+
 	r := e.Group("/restricted")
 	config := echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {

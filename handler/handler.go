@@ -34,9 +34,9 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　Loginの出力をmessageに格納
-	if eu.Email == "" || eu.Name == "" || eu.Password == "" {
-		return c.String(http.StatusNotFound, "入力値は見つかりません")
-	}
+	//if eu.Email == "" || eu.Password == "" {
+	//	return c.String(http.StatusNotFound, "入力値は見つかりません")
+	//}
 	message, err := u.Login(*eu)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func GetAccounts() echo.HandlerFunc {
 		pageFirst := (i - 1)
 		pageFirst *= 5
 
-		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
+		rows, err := db.Query("select * from user LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
