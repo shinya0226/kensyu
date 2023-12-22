@@ -15,7 +15,7 @@ func NewUserRepository(db *sql.DB) entity.IUserRepository {
 
 func (ur *userRepository) FindSingleRow(email string) (entity.User, error) {
 	u := entity.User{}
-	if err := ur.db.QueryRow("SELECT * FROM users WHERE Email = ?", email).
+	if err := ur.db.QueryRow("SELECT * FROM user WHERE Email = ?", email).
 		Scan(&u.Email, &u.Password, &u.Name, &u.IsAdmin); err != nil {
 		//　Emailが合致しないとき
 		return u, err
