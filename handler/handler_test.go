@@ -119,5 +119,4 @@ func TestRestricted(t *testing.T) {
 	if assert.NoError(t, handler.Restricted(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 	}
-
 }
