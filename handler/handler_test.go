@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/shinya0226/kensyu/infra/mysql"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -16,6 +15,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
+	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
