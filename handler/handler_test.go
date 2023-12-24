@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"github.com/shinya0226/kensyu/infra/mysql"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
+	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -114,15 +116,23 @@ func TestLogin(t *testing.T) {
 
 func TestRestricted(t *testing.T) {
 	e := echo.New()
-	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJ1aWJsYWVzZUBnbWFpbC5jb20iLCJleHAiOjE1NTk0MjQxMjIsIm9yaWdfaWF0IjoxNTU5NDIwNTIyfQ.kdIRkLjRc63VQvDcHECId45_8rlCr8QlAmVBcEG2tlE"
-	req := httptest.NewRequest(http.MethodGet, "/restricted", nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
+	form := url.Values{}
+	form.Add("email", "shinya.yamamoto6@persol-pt.co.jp")
+	form.Add("password", "yamamo10")
+
+	db := mysql.ConnectionDB()
+	userRepo := mysql.NewUserRepository(db)
+	loginUsecase := usecase.NewLoginUsecase(userRepo)
+
+	req := httptest.NewRequest(http.MethodGet, "/restricted", strings.NewReader(form.Encode()))
+	//　req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	err := handler.Restricted(c)
-	log.Fatal("エラー")
-	if err != nil {
-		return
+	h := handler.Login(loginUsecase)
+	err := h(c)
+	assert.NoError(t, err)
+	if status := rec.Code; status != http.StatusFound {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)
 	}
-	assert.Equal(t, http.StatusOK, rec.Code)
 }
