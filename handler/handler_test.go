@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -113,10 +114,15 @@ func TestLogin(t *testing.T) {
 
 func TestRestricted(t *testing.T) {
 	e := echo.New()
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJ1aWJsYWVzZUBnbWFpbC5jb20iLCJleHAiOjE1NTk0MjQxMjIsIm9yaWdfaWF0IjoxNTU5NDIwNTIyfQ.kdIRkLjRc63VQvDcHECId45_8rlCr8QlAmVBcEG2tlE"
 	req := httptest.NewRequest(http.MethodGet, "/restricted", nil)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	if assert.NoError(t, handler.Restricted(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
+	err := handler.Restricted(c)
+	log.Fatal("エラー")
+	if err != nil {
+		return
 	}
+	assert.Equal(t, http.StatusOK, rec.Code)
 }
