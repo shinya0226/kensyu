@@ -44,7 +44,6 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	logfo.IsAdmin = found.IsAdmin
 	//　JWTの作成
 	jwtMessage := createToken(e.Email)
-	//　出力の型を定義
 	logfo.AccessToken = jwtMessage
 	return logfo, nil
 }
