@@ -143,7 +143,8 @@ func TestRestricted(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 			c.Set("user", "jififijfijf")
-			err = handler.Restricted(c)
+			err2 := handler.Restricted(c)
+			assert.NoError(t, err2)
 			if status := rec.Code; status != http.StatusFound {
 				t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)
 			}
