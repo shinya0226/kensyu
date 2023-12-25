@@ -38,13 +38,11 @@ type AdminFormat struct {
 }
 
 type LoginFormat struct {
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	IsAdmin      int    `json:"isAdmin"`
-	Access_token string `json:"access_token"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
 }
-
-var logfo LoginFormat
 
 func Restricted(c echo.Context) error {
 	var logfo usecase.LoginFormat
@@ -104,6 +102,7 @@ func CreateAccount() echo.HandlerFunc {
 			return err
 		}
 		db := mysql.ConnectionDB()
+		db.Close()
 		ins, err := db.Prepare("INSERT INTO user VALUES(?,?,?,?)")
 		if err != nil {
 			return err
