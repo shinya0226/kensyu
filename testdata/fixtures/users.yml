@@ -3,4 +3,9 @@
   Password: "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1zVDAS"
   Name: "山本真也"
   IsAdmin: 0
+-
+  Email: "gakuto.saito10@persol-pt.co.jp"
+  Password: "gakuto10"
+  Name: "斉藤学都"
+  IsAdmin: 1
 
