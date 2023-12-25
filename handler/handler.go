@@ -104,10 +104,10 @@ func CreateAccount() echo.HandlerFunc {
 		db := mysql.ConnectionDB()
 		defer db.Close()
 		ins, err := db.Prepare("INSERT INTO user VALUES(?,?,?,?)")
-		defer ins.Close()
 		if err != nil {
 			return err
 		}
+		defer ins.Close()
 		pass, err := usecase.HashPassword(eu.Password)
 		if err != nil {
 			return err
