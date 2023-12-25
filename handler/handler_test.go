@@ -134,30 +134,15 @@ func TestRestricted(t *testing.T) {
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
 			e := echo.New()
-			ctrl := gomock.NewController(t)
-			ctrl.Finish()
 			v, err := json.Marshal(tt.Entity)
 			if err != nil {
 				log.Fatal(err)
 			}
-			req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewReader(v))
+			req := httptest.NewRequest(http.MethodGet, "/restricted", bytes.NewReader(v))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-			req.Header.Set(echo., echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
-			//　mockの生成
-			testMock := handler.NewMockILoginUsecase(ctrl)
-			h := handler.Login(testMock)
-			err = h(c)
-
-			v, err = json.Marshal(tt.Entity)
-			if err != nil {
-				log.Fatal(err)
-			}
-			req = httptest.NewRequest(http.MethodGet, "/restricted", bytes.NewReader(v))
-			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-			rec = httptest.NewRecorder()
-			c = e.NewContext(req, rec)
+			c.Set("user", "jififijfijf")
 			err = handler.Restricted(c)
 			if status := rec.Code; status != http.StatusFound {
 				t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)

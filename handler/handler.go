@@ -66,7 +66,7 @@ func FetchAccounts() echo.HandlerFunc {
 		pageFirst := (i - 1)
 		pageFirst *= 5
 
-		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
+		rows, err := db.Query("select * from user LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
