@@ -7,15 +7,12 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"os"
-	"strings"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
-	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/shinya0226/kensyu/entity"
@@ -115,24 +112,56 @@ func TestLogin(t *testing.T) {
 }
 
 func TestRestricted(t *testing.T) {
-	e := echo.New()
-	form := url.Values{}
-	form.Add("email", "shinya.yamamoto6@persol-pt.co.jp")
-	form.Add("password", "yamamo10")
+	email := "shinya.yamamoto6@persol-pt.co.jp"
+	pass := "yamamo10"
+	name := "山本真也"
+	testCase := []struct {
+		Description string
+		Entity      entity.User         //　入力
+		Want        usecase.LoginFormat //　出力
+		WantErr     bool                //　エラーが出るときはtrue
+		WantCode    int
+	}{
+		{
+			Description: "EmailとPasswordが両方合致",
+			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
+			Want: usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0,
+				AccessToken: "Anything"},
+			WantErr:  false,
+			WantCode: http.StatusOK,
+		},
+	}
+	for _, tt := range testCase {
+		t.Run(tt.Description, func(t *testing.T) {
+			e := echo.New()
+			ctrl := gomock.NewController(t)
+			ctrl.Finish()
+			v, err := json.Marshal(tt.Entity)
+			if err != nil {
+				log.Fatal(err)
+			}
+			req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewReader(v))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			req.Header.Set(echo., echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			//　mockの生成
+			testMock := handler.NewMockILoginUsecase(ctrl)
+			h := handler.Login(testMock)
+			err = h(c)
 
-	db := mysql.ConnectionDB()
-	userRepo := mysql.NewUserRepository(db)
-	loginUsecase := usecase.NewLoginUsecase(userRepo)
-
-	req := httptest.NewRequest(http.MethodGet, "/restricted", strings.NewReader(form.Encode()))
-	//　req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	h := handler.Login(loginUsecase)
-	err := h(c)
-	assert.NoError(t, err)
-	if status := rec.Code; status != http.StatusFound {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)
+			v, err = json.Marshal(tt.Entity)
+			if err != nil {
+				log.Fatal(err)
+			}
+			req = httptest.NewRequest(http.MethodGet, "/restricted", bytes.NewReader(v))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec = httptest.NewRecorder()
+			c = e.NewContext(req, rec)
+			err = handler.Restricted(c)
+			if status := rec.Code; status != http.StatusFound {
+				t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)
+			}
+		})
 	}
 }
