@@ -1,9 +1,8 @@
 package mysql
 
 import (
-	"github.com/shinya0226/kensyu/entity"
-
 	"database/sql"
+	"github.com/shinya0226/kensyu/entity"
 )
 
 type userRepository struct {

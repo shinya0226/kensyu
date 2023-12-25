@@ -23,9 +23,9 @@ type LoginFormat struct {
 	AccessToken string `json:"access_token"`
 }
 
+var logfo LoginFormat
+
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
-	//　出力の型を定義
-	logfo := LoginFormat{}
 	//　該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
 	//　Emailの合致確認

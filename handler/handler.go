@@ -15,6 +15,15 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	}
 }
 
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
+}
+
+var logfo LoginFormat
+
 // ログイン処理（詳細）
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
@@ -22,7 +31,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 		return err
 	}
 	//　Loginの出力をmessageに格納
-	if eu.Email == "" || eu.Name == "" || eu.Password == "" {
+	if eu.Email == "" || eu.Password == "" {
 		return c.String(http.StatusNotFound, "入力値は見つかりません")
 	}
 	message, err := u.Login(*eu)
