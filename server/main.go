@@ -31,7 +31,7 @@ func main() {
 		},
 		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
-	//認証
+	//　認証
 	r.Use(echojwt.WithConfig(config))
 
 	//　JWT認証
