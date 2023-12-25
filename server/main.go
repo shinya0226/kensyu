@@ -6,7 +6,6 @@ import (
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/infra/mysql"
 	"github.com/shinya0226/kensyu/usecase"
-	"log"
 )
 
 func main() {
@@ -17,7 +16,6 @@ func main() {
 	e.Use(middleware.Recover())
 
 	db := mysql.ConnectionDB()
-	log.Fatal(db)
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 

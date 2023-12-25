@@ -22,8 +22,6 @@ type LoginFormat struct {
 	AccessToken string `json:"access_token"`
 }
 
-var logfo LoginFormat
-
 // ログイン処理（詳細）
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
