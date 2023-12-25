@@ -51,7 +51,7 @@ func Restricted(c echo.Context) error {
 	return c.String(http.StatusOK, "認証OK")
 }
 
-func GetAccounts() echo.HandlerFunc {
+func FetchAccounts() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
 		defer db.Close()
