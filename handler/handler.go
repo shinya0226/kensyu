@@ -126,18 +126,17 @@ type DeleteFormat struct {
 	Email string `json:"email"`
 }
 
-var delefo DeleteFormat
-
 // アカウント削除
 func DeleteAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
+		defer db.Close()
 		df := new(DeleteFormat)
 		if err := c.Bind(df); err != nil {
 			return err
 		}
 
-		del, err := db.Prepare("DELETE FROM user WHERE Email = ?")
+		del, err := db.Prepare("DELETE FROM users WHERE Email = ?")
 		if err != nil {
 			return err
 		}
