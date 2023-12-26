@@ -8,7 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// パスワードの暗号化
 func HashPassword(rawPassword string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
 	return string(hashedPassword), err
