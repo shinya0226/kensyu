@@ -144,7 +144,7 @@ func TestCreateAccount(t *testing.T) {
 			WantCode:    http.StatusCreated,
 		},
 		{
-			Description: "アカウント作成完了",
+			Description: "Nothing エラー",
 			Entity:      entity.User{Email: "", Password: "", Name: "", IsAdmin: 0},
 			WantErr:     false,
 			WantCode:    http.StatusOK,
