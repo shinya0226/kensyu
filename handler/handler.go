@@ -121,9 +121,9 @@ func CreateAccount() echo.HandlerFunc {
 		return c.String(http.StatusCreated, "作成完了")
 	}
 }
-
-type DeleteFormat struct {
-	Email string `json:"email"`
+func hashPassword(rawPassword string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
+	return string(hashedPassword), err
 }
 
 // アカウント削除
@@ -149,7 +149,6 @@ func DeleteAccount() echo.HandlerFunc {
 	}
 }
 
-func hashPassword(rawPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
-	return string(hashedPassword), err
+type DeleteFormat struct {
+	Email string `json:"email"`
 }
