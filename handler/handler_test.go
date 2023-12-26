@@ -111,43 +111,18 @@ func TestLogin(t *testing.T) {
 	}
 }
 
-//func TestRestricted(t *testing.T) {
-//	email := "shinya.yamamoto6@persol-pt.co.jp"
-//	pass := "yamamo10"
-//	name := "山本真也"
-//	testCase := []struct {
-//		Description string
-//		Entity      entity.User         //　入力
-//		Want        usecase.LoginFormat //　出力
-//		WantErr     bool                //　エラーが出るときはtrue
-//		WantCode    int
-//	}{
-//		{
-//			Description: "EmailとPasswordが両方合致",
-//			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
-//			Want: usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0,
-//				AccessToken: "Anything"},
-//			WantErr:  false,
-//			WantCode: http.StatusOK,
-//		},
-//	}
-//	for _, tt := range testCase {
-//		t.Run(tt.Description, func(t *testing.T) {
-//			e := echo.New()
-//			v, err := json.Marshal(tt.Entity)
-//			if err != nil {
-//				log.Fatal(err)
-//			}
-//			req := httptest.NewRequest(http.MethodGet, "/restricted", bytes.NewReader(v))
-//			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-//			rec := httptest.NewRecorder()
-//			c := e.NewContext(req, rec)
-//			c.Set("user", "jififijfijf")
-//			err2 := handler.Restricted(c)
-//			assert.NoError(t, err2)
-//			if status := rec.Code; status != http.StatusFound {
-//				t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusFound)
-//			}
-//		})
-//	}
-//}
+func TestFetchAccounts(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/allowed/accounts/:page")
+	c.SetParamNames("page")
+	c.SetParamValues("2")
+	h := handler.FetchAccounts()
+	err := h(c)
+	if (err != nil) != true {
+		t.Errorf("Login() error = %v, wantErr %v", err, true)
+	}
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
