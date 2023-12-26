@@ -1,13 +1,121 @@
-# version: 2.1
-# jobs:
-#   build:
-#     docker:
-#       - image: cimg/golang:1.14.6
-#     steps:
-#       - checkout
-#       ## dbを立ち上げる
-#       ## migrationをよみこむ
-#       ## fixtureをよみこむ
-#       - run:
-#           name: Run tests
-#           command: go test -v
+version: 2.1
+defaults: &defaults
+  working_directory: /go/src/github.com/shinya0226/kensyu/
+  docker:
+    - image: cimg/go:1.18
+      user: root
+      environment:
+        GO111MODULE: "on"
+        HOME: "/root"
+        TZ: "Asia/Tokyo"
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: "go mod download"
+          command: go mod download
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - ../../../../../go/pkg/mod
+      - persist_to_workspace:
+          root: /go
+          paths:
+            - pkg/mod
+            - src/github.com/shinya0226/kensyu/
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /go
+      - run:
+          name: install linter
+          command: |
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /go/bin v1.54.2
+      - run:
+          name: Add missing and remove unused modules
+          command: go mod tidy
+      - run:
+          name: "do lint"
+          command: |
+            mkdir -p ./out
+            /go/bin/golangci-lint run
+      - store_test_results:
+          path: out
+  test:
+    working_directory: /go/src/github.com/shinya0226/kensyu/
+    docker:
+      - image: cimg/go:1.18
+        user: root
+        environment:
+          GO111MODULE: "on"
+          HOME: "/root"
+          TZ: "Asia/Tokyo"
+      - image: cimg/mysql:8.0.33  #　mysql
+        environment:
+          TZ: JST-9
+          MYSQL_USER: atsuser
+          MYSQL_PASSWORD: atspass
+          MYSQL_ROOT_PASSWORD: atspass
+          MYSQL_DATABASE: kensyu_testing
+        command:
+          ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]
+
+    steps:
+      - attach_workspace:
+          at: /go
+      - run:
+          name: Add missing and remove unused modules
+          command: go mod tidy
+      - run:
+          name: "setup base env"
+          command: |
+            cat .circleci/.env.circleci >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: "install tool"
+          command: |
+            curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
+      - run:
+          name: "waiting mysql startup"
+          command: dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 1m
+      - run:
+          name: migrate
+          command: |
+            ./migrate -source file://./migrations/users/ -database "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}" up
+      - run:
+          name: "do test!"
+          command: |
+            mkdir -p ./out/gotest
+            gotestsum --junitfile ./out/gotest/junit.xml \
+              --format=dots -- \
+              -coverprofile=./out/coverage.out \
+              ./...
+      - run:
+          name: "coverage to html"
+          command: go tool cover -html ./out/coverage.out -o ./out/coverage.html
+          when: always
+      - store_artifacts:
+          path: out/coverage.html
+          destination: coverage.html
+      - store_artifacts:
+          path: out/coverage.out
+          destination: coverage.out
+      - store_test_results:
+          path: out/gotest
+
+workflows:
+  build-and-test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
