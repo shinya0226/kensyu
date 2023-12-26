@@ -143,6 +143,12 @@ func TestCreateAccount(t *testing.T) {
 			WantErr:     false,
 			WantCode:    http.StatusCreated,
 		},
+		{
+			Description: "アカウント作成完了",
+			Entity:      entity.User{Email: "", Password: "", Name: "", IsAdmin: 0},
+			WantErr:     false,
+			WantCode:    http.StatusOK,
+		},
 	}
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
