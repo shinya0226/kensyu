@@ -110,3 +110,19 @@ func TestLogin(t *testing.T) {
 		})
 	}
 }
+
+func TestFetchAccounts(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/allowed/accounts/:page")
+	c.SetParamNames("page")
+	c.SetParamValues("1")
+	h := handler.FetchAccounts()
+	err := h(c)
+	if (err != nil) != false {
+		t.Errorf("FetchAccounts() error = %v, wantErr %v", err, false)
+	}
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
