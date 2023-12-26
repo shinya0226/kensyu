@@ -179,7 +179,7 @@ func TestDeleteAccount(t *testing.T) {
 			Description: "アカウント削除が正常に完了",
 			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
 			WantErr:     false,
-			WantCode:    http.StatusCreated,
+			WantCode:    http.StatusOK,
 		},
 	}
 	for _, tt := range testCase {
