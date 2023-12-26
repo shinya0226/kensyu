@@ -118,7 +118,7 @@ func TestFetchAccounts(t *testing.T) {
 	c := e.NewContext(req, rec)
 	c.SetPath("/allowed/accounts/:page")
 	c.SetParamNames("page")
-	c.SetParamValues("2")
+	c.SetParamValues("1")
 	h := handler.FetchAccounts()
 	err := h(c)
 	if (err != nil) != true {
