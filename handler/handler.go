@@ -140,6 +140,7 @@ func DeleteAccount() echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
+		defer del.Close()
 		res, err := del.Exec(df.Email)
 		if err != nil || res == nil {
 			return err
