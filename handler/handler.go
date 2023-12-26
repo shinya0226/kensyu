@@ -35,8 +35,19 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
 
+type AdminFormat struct {
+	IsAdmin int `json:"isAdmin"`
+}
+
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
+}
+
 func Allowed(c echo.Context) error {
-	var logfo entity.LoginFormat
+	var logfo LoginFormat
 	// JWT認証
 	token, _ := c.Get("user").(*jwt.Token)
 	_, err := usecase.VerifyToken(token.Raw)
@@ -120,7 +131,7 @@ func DeleteAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		df := new(entity.DeleteFormat)
+		df := new(DeleteFormat)
 		if err := c.Bind(df); err != nil {
 			return err
 		}
@@ -138,12 +149,16 @@ func DeleteAccount() echo.HandlerFunc {
 	}
 }
 
+type DeleteFormat struct {
+	Email string `json:"email"`
+}
+
 // アカウント更新
 func UpdateAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ua := new(entity.UpdateFormat)
+		ua := new(UpdateFormat)
 		if err := c.Bind(ua); err != nil {
 			return err
 		}
@@ -162,4 +177,10 @@ func UpdateAccount() echo.HandlerFunc {
 		}
 		return c.String(http.StatusOK, "更新完了")
 	}
+}
+
+type UpdateFormat struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	IsAdmin  int    `json:"isAdmin"`
 }
