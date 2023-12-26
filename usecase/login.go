@@ -14,23 +14,16 @@ func NewLoginUsecase(repo entity.IUserRepository) ILoginUsecase {
 }
 
 type ILoginUsecase interface {
-	Login(e entity.User) (LoginFormat, error)
+	Login(e entity.User) (entity.LoginFormat, error)
 }
 
-type LoginFormat struct {
-	Email       string `json:"email"`
-	Name        string `json:"name"`
-	IsAdmin     int    `json:"isAdmin"`
-	AccessToken string `json:"access_token"`
-}
-
-func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
-	var logfo LoginFormat
+func (u *loginUsecase) Login(e entity.User) (entity.LoginFormat, error) {
+	var logfo entity.LoginFormat
 	//　該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
 	//　Emailの合致確認
 	if err != nil {
-		return LoginFormat{}, err
+		return entity.LoginFormat{}, err
 	}
 
 	logfo.Email = found.Email
@@ -38,7 +31,7 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	//　Passwordの合致確認
 	err = verifyPassword(found.Password, e.Password)
 	if err != nil {
-		return LoginFormat{}, err
+		return entity.LoginFormat{}, err
 	}
 	logfo.Name = found.Name
 	logfo.IsAdmin = found.IsAdmin
