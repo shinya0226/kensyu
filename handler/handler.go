@@ -121,7 +121,7 @@ func CreateAccount() echo.HandlerFunc {
 		if res == nil {
 			return err
 		}
-		return c.JSON(http.StatusCreated, eu)
+		return c.String(http.StatusCreated, "作成完了")
 	}
 }
 
