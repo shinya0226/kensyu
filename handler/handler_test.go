@@ -162,6 +162,5 @@ func TestCreateAccount(t *testing.T) {
 			}
 			assert.Equal(t, tt.WantCode, rec.Code)
 		})
-
 	}
 }
