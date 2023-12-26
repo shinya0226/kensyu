@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/shinya0226/kensyu/entity"
@@ -110,7 +108,7 @@ func CreateAccount() echo.HandlerFunc {
 			return err
 		}
 		defer ins.Close()
-		pass, err := HashPassword(eu.Password)
+		pass, err := usecase.HashPassword(eu.Password)
 		if err != nil {
 			return err
 		}
@@ -123,9 +121,4 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		return c.JSON(http.StatusCreated, eu)
 	}
-}
-
-func HashPassword(rawPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
-	return string(hashedPassword), err
 }

@@ -4,8 +4,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // 暗号化されたパスワードとユーザーが入力したパスワードの比較
@@ -36,4 +37,9 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 		return token, err
 	}
 	return token, err
+}
+
+func HashPassword(rawPassword string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
+	return string(hashedPassword), err
 }
