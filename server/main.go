@@ -33,7 +33,7 @@ func main() {
 	}
 	r.Use(echojwt.WithConfig(config))
 	//　JWT認証
-	r.GET("", handler.Restricted)                     //　http://localhost:8080/restricted
-	r.GET("/accounts/:page", handler.FetchAccounts()) //　http://localhost:8080/restricted/accounts/:page
+	r.GET("", handler.Restricted)                     //　http://localhost:8080/allowed
+	r.GET("/accounts/:page", handler.FetchAccounts()) //　http://localhost:8080/allowed/accounts/:page
 	e.Logger.Fatal(e.Start(":8080"))
 }
