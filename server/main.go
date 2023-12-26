@@ -36,7 +36,7 @@ func main() {
 
 	//　JWT認証
 	r.GET("", handler.Allowed)                        //　http://localhost:8080/allowed
-	r.GET("/accounts/:page", handler.FetchAccounts()) // http://localhost:8080/restricted/accounts/1
-	r.POST("/account/new", handler.CreateAccount())   // http://localhost:8080/restricted/account/new
+	r.GET("/accounts/:page", handler.FetchAccounts()) // http://localhost:8080/allowed/accounts/1
+	r.POST("/account/new", handler.CreateAccount())   // http://localhost:8080/allowed/account/new
 	e.Logger.Fatal(e.Start(":8080"))
 }
