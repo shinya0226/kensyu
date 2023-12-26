@@ -202,3 +202,41 @@ func TestDeleteAccount(t *testing.T) {
 		})
 	}
 }
+
+func TestUpdateAccount(t *testing.T) {
+	email := "shinnosuke.takahashi7@persol-pt.co.jp"
+	pass := "takahashi7"
+	name := "高橋新之助"
+	testCase := []struct {
+		Description string
+		Entity      entity.User //　入力
+		WantErr     bool        //　エラーが出るときはtrue
+		WantCode    int
+	}{
+		{
+			Description: "アカウント更新が正常に完了",
+			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
+			WantErr:     false,
+			WantCode:    http.StatusOK,
+		},
+	}
+	for _, tt := range testCase {
+		t.Run(tt.Description, func(t *testing.T) {
+			e := echo.New()
+			v, err := json.Marshal(tt.Entity)
+			if err != nil {
+				log.Fatal(err)
+			}
+			req := httptest.NewRequest(http.MethodPut, "/allowed/account/new", bytes.NewReader(v))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			h := handler.UpdateAccount()
+			err = h(c)
+			if (err != nil) != tt.WantErr {
+				t.Errorf("UpdateAccount() error = %v, wantErr %v", err, tt.WantErr)
+			}
+			assert.Equal(t, tt.WantCode, rec.Code)
+		})
+	}
+}
