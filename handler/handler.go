@@ -157,6 +157,7 @@ type DeleteFormat struct {
 func UpdateAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		db := mysql.ConnectionDB()
+		defer db.Close()
 		ua := new(UpdateFormat)
 		if err := c.Bind(ua); err != nil {
 			return err
@@ -169,6 +170,7 @@ func UpdateAccount() echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
+		defer upd.Close()
 		res, err := upd.Exec(pass, ua.IsAdmin, ua.Email)
 		if err != nil || res == nil {
 			return err
