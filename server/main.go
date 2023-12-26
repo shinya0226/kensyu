@@ -24,7 +24,7 @@ func main() {
 
 	e.POST("/login", handler.Login(loginUsecase))
 
-	r := e.Group("/restricted")
+	r := e.Group("/allowed")
 	config := echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(jwt.MapClaims)
@@ -34,6 +34,6 @@ func main() {
 	r.Use(echojwt.WithConfig(config))
 	//　JWT認証
 	r.GET("", handler.Restricted)                     //　http://localhost:8080/restricted
-	r.GET("/accounts/:page", handler.FetchAccounts()) //　http://localhost:8080/restricted/accounts/1
+	r.GET("/accounts/:page", handler.FetchAccounts()) //　http://localhost:8080/restricted/accounts/:page
 	e.Logger.Fatal(e.Start(":8080"))
 }
