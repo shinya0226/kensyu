@@ -8,11 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(rawPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
-	return string(hashedPassword), err
-}
-
 // 暗号化されたパスワードとユーザーが入力したパスワードの比較
 func verifyPassword(hashedPassword string, entryPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(entryPassword))
