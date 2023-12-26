@@ -37,7 +37,7 @@ type AdminFormat struct {
 	IsAdmin int `json:"isAdmin"`
 }
 
-func Restricted(c echo.Context) error {
+func Allowed(c echo.Context) error {
 	var logfo usecase.LoginFormat
 	// JWT認証
 	token, _ := c.Get("user").(*jwt.Token)

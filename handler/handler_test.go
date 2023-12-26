@@ -126,3 +126,15 @@ func TestFetchAccounts(t *testing.T) {
 	}
 	assert.Equal(t, http.StatusOK, rec.Code)
 }
+
+func TestAllowed(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/allowed", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	err := handler.Allowed(c)
+	if (err != nil) != false {
+		t.Errorf("Allowed() error = %v, wantErr %v", err, false)
+	}
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
