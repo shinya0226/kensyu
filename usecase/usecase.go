@@ -38,8 +38,3 @@ func VerifyToken(tokenString string) (*jwt.Token, error) {
 	}
 	return token, err
 }
-
-func HashPassword(rawPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
-	return string(hashedPassword), err
-}
