@@ -17,7 +17,6 @@ import (
 
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/handler"
-	"github.com/shinya0226/kensyu/usecase"
 )
 
 func TestMain(m *testing.M) {
@@ -32,19 +31,19 @@ func TestLogin(t *testing.T) {
 	testCase := []struct {
 		Description string
 		Usecase     func(testMock *handler.MockILoginUsecase)
-		Entity      entity.User         //　入力
-		Want        usecase.LoginFormat //　出力
-		WantErr     bool                //　エラーが出るときはtrue
+		Entity      entity.User        //　入力
+		Want        entity.LoginFormat //　出力
+		WantErr     bool               //　エラーが出るときはtrue
 		WantCode    int
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
 			Entity:      entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0},
-			Want: usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0,
+			Want: entity.LoginFormat{Email: email, Name: name, IsAdmin: 0,
 				AccessToken: "Anything"},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
 				testMock.EXPECT().Login(entity.User{Email: email, Password: pass, Name: name, IsAdmin: 0}).
-					Return(usecase.LoginFormat{Email: email, Name: name, IsAdmin: 0, AccessToken: "Anything"}, nil)
+					Return(entity.LoginFormat{Email: email, Name: name, IsAdmin: 0, AccessToken: "Anything"}, nil)
 			},
 			WantErr:  false,
 			WantCode: http.StatusOK,
@@ -52,10 +51,10 @@ func TestLogin(t *testing.T) {
 		{
 			Description: "Emailエラーによる不合致",
 			Entity:      entity.User{Email: "Emailは違うよ", Password: pass, Name: name, IsAdmin: 0},
-			Want:        usecase.LoginFormat{},
+			Want:        entity.LoginFormat{},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
 				testMock.EXPECT().Login(entity.User{Email: "Emailは違うよ", Password: pass, Name: name, IsAdmin: 0}).
-					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Email error"))
+					Return(entity.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Email error"))
 			},
 			WantErr:  true,
 			WantCode: http.StatusOK,
@@ -63,10 +62,10 @@ func TestLogin(t *testing.T) {
 		{
 			Description: "Passwordエラーによる不合致",
 			Entity:      entity.User{Email: email, Password: "Passwordは違うよ", Name: name, IsAdmin: 0},
-			Want:        usecase.LoginFormat{},
+			Want:        entity.LoginFormat{},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
 				testMock.EXPECT().Login(entity.User{Email: email, Password: "Passwordは違うよ", Name: name, IsAdmin: 0}).
-					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Password error"))
+					Return(entity.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Password error"))
 			},
 			WantErr:  true,
 			WantCode: http.StatusOK,
@@ -74,10 +73,10 @@ func TestLogin(t *testing.T) {
 		{
 			Description: "Nothingエラーによる不合致",
 			Entity:      entity.User{Email: "", Password: "", Name: "", IsAdmin: 0},
-			Want:        usecase.LoginFormat{},
+			Want:        entity.LoginFormat{},
 			Usecase: func(testMock *handler.MockILoginUsecase) {
 				testMock.EXPECT().Login(entity.User{Email: "", Password: "", Name: "", IsAdmin: 0}).
-					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
+					Return(entity.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("empty"))
 			},
 			WantErr:  false,
 			WantCode: http.StatusNotFound,

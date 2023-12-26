@@ -36,7 +36,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 }
 
 func Allowed(c echo.Context) error {
-	var logfo usecase.LoginFormat
+	var logfo entity.LoginFormat
 	// JWT認証
 	token, _ := c.Get("user").(*jwt.Token)
 	_, err := usecase.VerifyToken(token.Raw)

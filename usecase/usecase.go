@@ -9,6 +9,13 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
+}
+
 // 暗号化されたパスワードとユーザーが入力したパスワードの比較
 func verifyPassword(hashedPassword string, entryPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(entryPassword))
