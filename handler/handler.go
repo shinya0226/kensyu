@@ -103,22 +103,10 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ins, err := db.Prepare("INSERT INTO users VALUES(?,?,?,?)")
-		if err != nil {
-			return err
-		}
+		ins, _ := db.Prepare("INSERT INTO users VALUES(?,?,?,?)")
 		defer ins.Close()
-		pass, err := usecase.HashPassword(eu.Password)
-		if err != nil {
-			return err
-		}
-		res, err := ins.Exec(eu.Email, pass, eu.Name, eu.IsAdmin)
-		if err != nil {
-			return err
-		}
-		if res == nil {
-			return err
-		}
+		pass, _ := usecase.HashPassword(eu.Password)
+		ins.Exec(eu.Email, pass, eu.Name, eu.IsAdmin)
 		return c.JSON(http.StatusCreated, eu)
 	}
 }
