@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -38,7 +39,7 @@ func main() {
 	r.GET("", handler.Allowed)                           //　http://localhost:8080/allowed
 	r.GET("/accounts/:page", handler.FetchAccounts())    // http://localhost:8080/allowed/accounts/1
 	r.POST("/account/new", handler.CreateAccount())      // http://localhost:8080/allowed/account/new
-	r.DELETE("/account/delete", handler.DeleteAccount()) // http://localhost:8080/restricted/account/delete
+	r.DELETE("/account/delete", handler.DeleteAccount()) // http://localhost:8080/alloqed/account/delete
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
