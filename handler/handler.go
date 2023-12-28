@@ -78,7 +78,7 @@ func FetchAccounts() echo.HandlerFunc {
 		pageFirst *= 5
 
 		table := os.Getenv("DB_TABLE")
-		rows, err := db.Query("select * from"+" "+table+" "+"LIMIT ?,5", pageFirst)
+		rows, err := db.Query("SELECT * FROM"+" "+table+" "+"LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
@@ -108,7 +108,7 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ins, err := db.Prepare("INSERT INTO" + " " + table + "VALUES(?,?,?,?)")
+		ins, err := db.Prepare("INSERT INTO" + " " + table + " " + "VALUES(?,?,?,?)")
 		if err != nil {
 			return err
 		}
