@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -74,11 +75,12 @@ func FetchAccounts() echo.HandlerFunc {
 		var i int
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
-		pageFirst := (i - 1)
-		pageFirst *= 5
+		pageFirst := i - 1
+		pageFirst = pageFirst * 5
 
 		table := os.Getenv("DB_TABLE")
-		rows, err := db.Query("SELECT * FROM"+" "+table+" "+"LIMIT ?", 5)
+		sql := fmt.Sprintf("SELECT * FROM" + " " + table + " " + "LIMIT ?")
+		rows, err := db.Query(sql, 5)
 		if err != nil {
 			return err
 		}
