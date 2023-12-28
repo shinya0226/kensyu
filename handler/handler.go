@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -78,6 +79,7 @@ func FetchAccounts() echo.HandlerFunc {
 		pageFirst *= 5
 
 		table := os.Getenv("DB_TABLE")
+		log.Fatal("SELECT * FROM" + " " + table + " " + "LIMIT 5")
 		rows, err := db.Query("SELECT * FROM" + " " + table + " " + "LIMIT 5")
 		if err != nil {
 			return err
