@@ -176,6 +176,9 @@ func UpdateAccount() echo.HandlerFunc {
 		if err := c.Bind(ua); err != nil {
 			return err
 		}
+		if ua.Email == "" || ua.Password == "" {
+			return c.String(http.StatusNotFound, "入力値はありません")
+		}
 		pass, err := hashPassword(ua.Password)
 		if err != nil {
 			return err
