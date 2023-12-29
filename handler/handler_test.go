@@ -52,7 +52,7 @@ func TestLogin(t *testing.T) {
 					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Email error"))
 			},
 			WantErr:  true,
-			WantCode: http.StatusOK,
+			WantCode: http.StatusNotFound,
 		},
 		{
 			Description: "Passwordエラーによる不合致",
@@ -63,7 +63,7 @@ func TestLogin(t *testing.T) {
 					Return(usecase.LoginFormat{Email: "", Name: "", IsAdmin: 0, AccessToken: ""}, errors.New("Password error"))
 			},
 			WantErr:  true,
-			WantCode: http.StatusOK,
+			WantCode: http.StatusNotFound,
 		},
 		{
 			Description: "Nothingエラーによる不合致",
