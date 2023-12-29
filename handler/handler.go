@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
@@ -73,10 +75,12 @@ func FetchAccounts() echo.HandlerFunc {
 		var i int
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
-		pageFirst := (i - 1)
-		pageFirst *= 5
-
-		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
+		pageFirst := i - 1
+		paging := 5
+		pagefirst := pageFirst * paging
+		table := os.Getenv("DB_TABLE")
+		sql := fmt.Sprintf("select * from" + " " + table + " " + "LIMIT ?,5")
+		rows, err := db.Query(sql, pagefirst)
 		if err != nil {
 			return err
 		}
@@ -105,7 +109,9 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ins, err := db.Prepare("INSERT INTO users VALUES(?,?,?,?)")
+		table := os.Getenv("DB_TABLE")
+		sql := fmt.Sprintf("INSERT INTO" + " " + table + " " + "VALUES(?,?,?,?)")
+		ins, err := db.Prepare(sql)
 		if err != nil {
 			return err
 		}
@@ -135,8 +141,9 @@ func DeleteAccount() echo.HandlerFunc {
 		if err := c.Bind(df); err != nil {
 			return err
 		}
-
-		del, err := db.Prepare("DELETE FROM users WHERE Email = ?")
+		table := os.Getenv("DB_TABLE")
+		sql := fmt.Sprintf("DELETE FROM" + " " + table + " " + "WHERE Email = ?")
+		del, err := db.Prepare(sql)
 		if err != nil {
 			return err
 		}
