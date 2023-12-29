@@ -3,8 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/golang-jwt/jwt/v5"
+	_ "github.com/go-sql-driver/mysql"
 	echojwt "github.com/labstack/echo-jwt/v4"
+
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
