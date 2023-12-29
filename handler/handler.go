@@ -108,7 +108,7 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ins, err := db.Prepare("INSERT INTO ? VALUES(?,?,?,?);")
+		ins, err := db.Prepare("INSERT INTO ? VALUES(?,?,?,?)")
 		if err != nil {
 			return err
 		}
