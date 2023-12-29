@@ -78,7 +78,6 @@ func FetchAccounts() echo.HandlerFunc {
 		pageFirst *= 5
 
 		table := os.Getenv("DB_TABLE")
-		paging := 5
 		rows, err := db.Query("SELECT * FROM ? LIMIT 5;", table)
 		if err != nil {
 			return err
