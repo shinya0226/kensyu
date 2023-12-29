@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -106,8 +105,7 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		execSequ := fmt.Sprintf("INSERT INTO users VALUES(?,?,?,?)")
-		ins, err := db.Prepare(execSequ)
+		ins, err := db.Prepare("INSERT INTO users VALUES(?,?,?,?)")
 		if err != nil {
 			return err
 		}
