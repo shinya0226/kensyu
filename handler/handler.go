@@ -76,9 +76,10 @@ func FetchAccounts() echo.HandlerFunc {
 		//　読み込み開始のページの定義
 		pageFirst := i - 1
 		pagefirst := pageFirst * 5
+		paging := 5
 
 		table := os.Getenv("DB_TABLE")
-		rows, err := db.Query("SELECT * FROM ? LIMIT ?,5;", table, pagefirst)
+		rows, err := db.Query("SELECT * FROM ? LIMIT ?,?;", table, pagefirst, paging)
 		if err != nil {
 			return err
 		}
