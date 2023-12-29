@@ -75,7 +75,7 @@ func FetchAccounts() echo.HandlerFunc {
 		var i int
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
-		pageFirst := i - 1
+		pageFirst := i
 		paging := 5
 		pagefirst := pageFirst * paging
 		table := os.Getenv("DB_TABLE")
@@ -110,7 +110,7 @@ func CreateAccount() echo.HandlerFunc {
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		ins, err := db.Prepare("INSERT INTO ? VALUES(?,?,?,?)")
+		ins, err := db.Prepare("INSERT INTO %s VALUES(%s,%s,%s,%s)", table)
 		if err != nil {
 			return err
 		}
