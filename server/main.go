@@ -5,6 +5,7 @@ import (
 
 	echojwt "github.com/labstack/echo-jwt/v4"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
