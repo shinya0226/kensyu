@@ -34,7 +34,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	}
 	message, err := u.Login(*eu)
 	if err != nil {
-		return err
+		return c.String(http.StatusNotFound, "Emailは見つかりません")
 	}
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
