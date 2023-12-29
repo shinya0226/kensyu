@@ -75,11 +75,11 @@ func FetchAccounts() echo.HandlerFunc {
 		var i int
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
-		pageFirst := i
+		pageFirst := i - 1
 		paging := 5
 		pagefirst := pageFirst * paging
 		table := os.Getenv("DB_TABLE")
-		execSequ := fmt.Sprintf("SELECT * FROM"+" "+table+" "+"LIMIT %s,5;", pagefirst)
+		execSequ := fmt.Sprintf("SELECT * FROM"+" "+table+" "+"LIMIT"+" "+page+",?", paging)
 		rows, err := db.Query(execSequ)
 		if err != nil {
 			return err
