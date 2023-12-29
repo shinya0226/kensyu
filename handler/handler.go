@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"github.com/golang-jwt/jwt"
 	"net/http"
+	"os"
 	"strconv"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/shinya0226/kensyu/entity"
 	"github.com/shinya0226/kensyu/infra/mysql"
@@ -65,8 +66,8 @@ func FetchAccounts() echo.HandlerFunc {
 		//　読み込み開始のページの定義
 		pageFirst := (i - 1)
 		pageFirst *= 5
-
-		rows, err := db.Query("select * from users LIMIT ?,5", pageFirst)
+		table := os.Getenv("DB_TABLE")
+		rows, err := db.Query("select * from"+" "+table+" "+"LIMIT ?,5", pageFirst)
 		if err != nil {
 			return err
 		}
