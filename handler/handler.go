@@ -75,8 +75,8 @@ func FetchAccounts() echo.HandlerFunc {
 		i, _ = strconv.Atoi(page)
 		//　読み込み開始のページの定義
 		pageFirst := i - 1
-		pagefirst := pageFirst * 5
 		paging := 5
+		pagefirst := pageFirst * paging
 
 		table := os.Getenv("DB_TABLE")
 		rows, err := db.Query("SELECT * FROM ? LIMIT ?,?;", table, pagefirst, paging)
