@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -78,7 +79,8 @@ func FetchAccounts() echo.HandlerFunc {
 		paging := 5
 		pagefirst := pageFirst * paging
 		table := os.Getenv("DB_TABLE")
-		rows, err := db.Query("select * from"+" "+table+" "+"LIMIT ?,5", pagefirst)
+		sql := fmt.Sprintf("select * from" + " " + table + " " + "LIMIT ?,5")
+		rows, err := db.Query(sql, pagefirst)
 		if err != nil {
 			return err
 		}
@@ -108,7 +110,8 @@ func CreateAccount() echo.HandlerFunc {
 		db := mysql.ConnectionDB()
 		defer db.Close()
 		table := os.Getenv("DB_TABLE")
-		ins, err := db.Prepare("INSERT INTO" + " " + table + " " + "VALUES(?,?,?,?)")
+		sql := fmt.Sprintf("INSERT INTO" + " " + table + " " + "VALUES(?,?,?,?)")
+		ins, err := db.Prepare(sql)
 		if err != nil {
 			return err
 		}
