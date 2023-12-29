@@ -108,6 +108,9 @@ func CreateAccount() echo.HandlerFunc {
 		if err := c.Bind(eu); err != nil {
 			return err
 		}
+		if eu.Email == "" || eu.Password == "" || eu.Name == "" {
+			return c.String(http.StatusNotFound, "入力値はありません")
+		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
 		table := os.Getenv("DB_TABLE")
