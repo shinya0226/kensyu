@@ -19,6 +19,14 @@ func Login(u usecase.ILoginUsecase) echo.HandlerFunc {
 	}
 }
 
+type LoginFormat struct {
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
+}
+
+// ログイン処理（詳細）
 func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	eu := new(entity.User)
 	if err := c.Bind(eu); err != nil {
@@ -30,7 +38,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	}
 	message, err := u.Login(*eu)
 	if err != nil {
-		return err
+		return c.String(http.StatusNotFound, "Emailは見つかりません")
 	}
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
