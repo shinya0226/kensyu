@@ -3,7 +3,6 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
@@ -78,11 +77,7 @@ func FetchAccounts() echo.HandlerFunc {
 		pageFirst := i - 1
 		paging := 5
 		pagefirst := pageFirst * paging
-		pageone := string(rune(pagefirst))
-		pages := string(rune(paging))
-		table := os.Getenv("DB_TABLE")
-		execSequ := fmt.Sprintf("SELECT * FROM" + " " + table + " " + "LIMIT" + " " + pageone + "," + pages)
-		rows, err := db.Query(execSequ)
+		rows, err := db.Query("select * from users LIMIT ?,5", pagefirst)
 		if err != nil {
 			return err
 		}
@@ -105,14 +100,13 @@ func FetchAccounts() echo.HandlerFunc {
 // アカウント作成
 func CreateAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		table := os.Getenv("DB_TABLE")
 		eu := new(entity.User)
 		if err := c.Bind(eu); err != nil {
 			return err
 		}
 		db := mysql.ConnectionDB()
 		defer db.Close()
-		execSequ := fmt.Sprintf("INSERT INTO" + " " + table + " " + "VALUES(?,?,?,?)")
+		execSequ := fmt.Sprintf("INSERT INTO users VALUES(?,?,?,?)")
 		ins, err := db.Prepare(execSequ)
 		if err != nil {
 			return err
