@@ -145,6 +145,9 @@ func DeleteAccount() echo.HandlerFunc {
 		if err := c.Bind(df); err != nil {
 			return err
 		}
+		if df.Email == "" {
+			return c.String(http.StatusNotFound, "入力値はありません")
+		}
 		table := os.Getenv("DB_TABLE")
 		sql := fmt.Sprintf("DELETE FROM" + " " + table + " " + "WHERE Email = ?")
 		del, err := db.Prepare(sql)
