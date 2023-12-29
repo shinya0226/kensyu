@@ -1,6 +1,11 @@
 package main
 
 import (
+	"os"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
@@ -9,24 +14,30 @@ import (
 )
 
 func main() {
-	// インスタンスを作成
 	e := echo.New()
 
-	// ミドルウェアを設定
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	db := mysql.ConnectionDB()
-
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
-	// ルートを設定
-	e.GET("/", handler.Hello)
-
 	e.POST("/login", handler.Login(loginUsecase))
 
-	// サーバーをポート番号8080で起動
-	e.Logger.Fatal(e.Start(":8080"))
+	r := e.Group("/allowed")
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(jwt.MapClaims)
+		},
+		SigningKey: []byte(os.Getenv("JWT_SECRET")),
+	}
+	//　認証
+	r.Use(echojwt.WithConfig(config))
 
+	//　JWT認証
+	r.GET("", handler.Allowed)                        //　http://localhost:8080/allowed
+	r.GET("/accounts/:page", handler.FetchAccounts()) // http://localhost:8080/allowed/accounts/1
+	r.POST("/account/new", handler.CreateAccount())   // http://localhost:8080/allowed/account/new
+	e.Logger.Fatal(e.Start(":8080"))
 }
