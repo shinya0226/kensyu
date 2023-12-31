@@ -40,8 +40,8 @@ func main() {
 	r.GET("", handler.Allowed)                           //　http://localhost:8080/allowed
 	r.GET("/accounts/:page", handler.FetchAccounts())    // http://localhost:8080/allowed/accounts/1
 	r.POST("/account/new", handler.CreateAccount())      // http://localhost:8080/allowed/account/new
-	r.DELETE("/account/delete", handler.DeleteAccount()) // http://localhost:8080/restricted/account/delete
-	r.PUT("/account/update", handler.UpdateAccount())    // http://localhost:8080/restricted/account/update
+	r.DELETE("/account/delete", handler.DeleteAccount()) // http://localhost:8080/allowed/account/delete
+	r.PUT("/account/update", handler.UpdateAccount())    // http://localhost:8080/allowed/account/update
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
