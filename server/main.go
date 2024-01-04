@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	// インスタンスを作成
 	e := echo.New()
 
 	e.Use(middleware.Logger())
