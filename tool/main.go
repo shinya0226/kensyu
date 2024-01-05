@@ -1,12 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"os"
+	
+	"log"
+
+	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/testfixtures.v1"
-	"log"
-	"os"
 )
 
 func main() {
