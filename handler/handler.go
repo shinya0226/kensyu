@@ -35,8 +35,7 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	}
 	message, err := u.Login(*eu)
 	if err != nil {
-		err := entity.Err{Error: "input is nil and not found"}
-		return c.JSON(http.StatusNotFound, err)
+		return err
 	}
-	return c.JSON(http.StatusOK, message) //　structに詰める
+	return c.JSON(http.StatusOK, message)
 }
