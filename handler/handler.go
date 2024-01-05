@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/golang-jwt/jwt"
@@ -80,8 +79,7 @@ func FetchAccounts() echo.HandlerFunc {
 		//　読み込み開始のページの定義
 		pageFirst := (i - 1)
 		pageFirst *= 5
-		table := os.Getenv("DB_TABLE")
-		sql := fmt.Sprintf("select * from" + " " + table + " " + "LIMIT ?,5")
+		sql := fmt.Sprintf("select * from users LIMIT ?,5")
 		rows, err := db.Query(sql, pageFirst)
 		if err != nil {
 			return err

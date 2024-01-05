@@ -1,9 +1,8 @@
 package main
 
 import (
-	"os"
-	
 	"log"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
