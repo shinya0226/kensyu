@@ -8,9 +8,6 @@
 mysql -u ${DB_USER} -p -h ${DB_HOST}${DB_NAME} < ./tool/dump.sql
 2.パスワードを求められたら、${DB_PASS}を入力
 
-#fixtureの読み込み
-tool/main.goにて"go run main.go"を実行
-
 #migrationのインストール手順
 1."brew install golang-migrate"　このコマンドをCLIに入力
 2.migration up の実行
