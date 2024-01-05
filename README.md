@@ -5,8 +5,7 @@
 
 #mysqlのdumpファイルの読み込み 
 1.以下のコマンドをCLIに入力
-mysql -u ${DB_USER} -p -h ${DB_HOST}
-${DB_NAME} < /Users/398755_black/Documents/src/kensyu/tool/dump.sql
+mysql -u ${DB_USER} -p -h ${DB_HOST}${DB_NAME} < /Users/398755_black/Documents/src/kensyu/tool/dump.sql
 2.パスワードを求められたら、${DB_PASS}を入力
 
 #migrationのインストール手順
