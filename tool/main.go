@@ -1,26 +1,22 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-
 	"database/sql"
 	"fmt"
-	"github.com/shinya0226/kensyu/infra/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/testfixtures.v1"
 	"log"
-	"path/filepath"
+	"os"
 )
 
 func main() {
-	abspath, _ := filepath.Abs(FixturesPath)
-	fmt.Println(abspath)
 	prepareTestDatabase()
 }
 
 const FixturesPath = "testdata/fixtures"
 
 func prepareTestDatabase() *sql.DB {
-	db, err := mysql.ConnectionDB()
+	db, err := ConnectionDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,4 +25,13 @@ func prepareTestDatabase() *sql.DB {
 		log.Fatal(err)
 	}
 	return db
+}
+
+func ConnectionDB() (*sql.DB, error) {
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASS")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, pass, host, port, "fix_test")
+	return sql.Open("mysql", dsn)
 }
