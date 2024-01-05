@@ -1,4 +1,3 @@
-# kensyu
 #test
 #環境構築手順として.env.exampleファイルをコピーして .envrc ファイルを生成すること。
 #.envrcに環境を構築し、direnv allowコマンドでロードをすること。
