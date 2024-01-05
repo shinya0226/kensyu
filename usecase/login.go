@@ -32,7 +32,6 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	if err != nil {
 		return LoginFormat{}, err
 	}
-
 	logfo.Email = found.Email
 
 	//　Passwordの合致確認

@@ -17,8 +17,11 @@ const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
 func prepareTestDatabase() *sql.DB {
-	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	db, err := ConnectionDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
 	if err != nil {
 		log.Fatal(err)
 	}

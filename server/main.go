@@ -2,6 +2,8 @@ package main
 
 import (
 	"os"
+	
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
@@ -19,7 +21,10 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	db := mysql.ConnectionDB()
+	db, err := mysql.ConnectionDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
