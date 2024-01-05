@@ -30,11 +30,13 @@ func loginWithUsecase(u usecase.ILoginUsecase, c echo.Context) error {
 	}
 	//　Loginの出力をmessageに格納
 	if eu.Email == "" || eu.Password == "" {
-		return c.String(http.StatusNotFound, "入力値は見つかりません")
+		err := entity.Err{Error: "input is nil and not found"}
+		return c.JSON(http.StatusNotFound, err)
 	}
 	message, err := u.Login(*eu)
 	if err != nil {
-		return c.String(http.StatusNotFound, "Emailは見つかりません")
+		err := entity.Err{Error: "input is nil and not found"}
+		return c.JSON(http.StatusNotFound, err)
 	}
 	return c.JSON(http.StatusOK, message) //　structに詰める
 }
