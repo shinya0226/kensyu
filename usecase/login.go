@@ -17,40 +17,34 @@ type ILoginUsecase interface {
 }
 
 type LoginFormat struct {
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	IsAdmin      int    `json:"isAdmin"`
-	Access_token string `json:"access_token"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	IsAdmin     int    `json:"isAdmin"`
+	AccessToken string `json:"access_token"`
 }
 
 func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
-	//該当するユーザーを抽出（found）
+	var logfo LoginFormat
+	//　該当するユーザーを抽出（found）
 	found, err := u.repo.FindSingleRow(e.Email)
-
-	//出力の型を定義
-	logfo := LoginFormat{}
-
+	//　Emailの合致確認
+	if err != nil {
+		return LoginFormat{}, err
+	}
 	logfo.Email = found.Email
+
+	//　Passwordの合致確認
+	err = verifyPassword(found.Password, e.Password)
+	if err != nil {
+		return LoginFormat{}, err
+	}
 	logfo.Name = found.Name
 	logfo.IsAdmin = found.IsAdmin
 
-	if err != nil {
-		return logfo, err
-	}
-	//DBのパスワードのハッシュ化
-	pass, err := HashPassword(e.Password)
-	if err != nil {
-		return logfo, err
-	}
-	//パスワードの比較
-	if ans := VerifyPassword(pass, found.Password); ans != nil {
-		return logfo, err
-	}
-	//JWTの作成
-	jwt_message, err := CreateToken(e.Email)
-	//出力の型を定義
-	logfo.Access_token = jwt_message
+	//　JWTの作成
+	jwtMessage := createToken(e.Email)
+	//　出力の型を定義
+	logfo.AccessToken = jwtMessage
 
-	return logfo, err
-
+	return logfo, nil
 }

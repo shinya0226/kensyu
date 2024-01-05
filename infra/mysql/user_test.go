@@ -4,6 +4,8 @@ import (
 	"log"
 	"testing"
 
+	"database/sql"
+
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 	. "github.com/shinya0226/kensyu/infra/mysql"
@@ -11,21 +13,27 @@ import (
 	"gopkg.in/testfixtures.v1"
 )
 
-// fixtureのファイルパス
 const FixturesPath = "../../testdata/fixtures"
 
 // DBの設定
-func prepareTestDatabse() {
-	db := ConnectionDB()
-	err := testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+func prepareTestDatabase() *sql.DB {
+	db, err := ConnectionDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	err = testfixtures.LoadFixtures(FixturesPath, db, &testfixtures.MySQLHelper{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return db
 }
 
 // Emailのみの合致確認
 func TestFindSingleRow(t *testing.T) {
+	const email = "shinya.yamamoto6@persol-pt.co.jp"
+	const pass = "$2a$10$t.3jq0H5hhVQBGG1yxj5nOAUtlXp329t7uwZ.7dA0hoZk0V1zVDAS"
+	const name = "山本真也"
+
 	type user struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -37,13 +45,13 @@ func TestFindSingleRow(t *testing.T) {
 		Email       string `json:"email"`
 		Password    string `json:"password"`
 		Want        user
-		WantErr     bool //エラーが出るときはtrue
+		WantErr     bool //　エラーが出るときはtrue
 	}{
 		{
 			Description: "EmailとPasswordが両方合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
 			Password:    "yamamo10",
-			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10", "山本真也", 0},
+			Want:        user{email, pass, name, 0},
 			WantErr:     false,
 		},
 		{
@@ -57,7 +65,7 @@ func TestFindSingleRow(t *testing.T) {
 			Description: "Passwordエラーによる不合致",
 			Email:       "shinya.yamamoto6@persol-pt.co.jp",
 			Password:    "Passwordは違うよ",
-			Want:        user{"shinya.yamamoto6@persol-pt.co.jp", "yamamo10", "山本真也", 0},
+			Want:        user{email, pass, name, 0},
 			WantErr:     false,
 		},
 		{
@@ -71,23 +79,19 @@ func TestFindSingleRow(t *testing.T) {
 
 	for _, tt := range testCase {
 		t.Run(tt.Description, func(t *testing.T) {
-			db := ConnectionDB()
-			//fixtureの設定
-			prepareTestDatabse()
-
+			db := prepareTestDatabase()
 			userRepo := NewUserRepository(db)
 			got, err := userRepo.FindSingleRow(tt.Email)
 
-			//errがあるか判別（あるときはtrue,ないときはfalse）
+			//　errがあるか判別（あるときはtrue,ないときはfalse）
 			if (err != nil) != tt.WantErr {
 				t.Errorf("FindSingleRow() error = %v, wantErr %v", err, tt.WantErr)
 			}
-			//gotとtt.Wantの中身を比較
-			assert.Equal(t, got.Email, tt.Want.Email)
-			assert.Equal(t, got.Password, tt.Want.Password)
-			assert.Equal(t, got.Name, tt.Want.Name)
-			assert.Equal(t, got.IsAdmin, tt.Want.IsAdmin)
-			return
+			//　gotとtt.Wantの中身を比較
+			assert.Equal(t, tt.Want.Email, got.Email)
+			assert.Equal(t, tt.Want.Password, got.Password)
+			assert.Equal(t, tt.Want.Name, got.Name)
+			assert.Equal(t, tt.Want.IsAdmin, got.IsAdmin)
 		})
 	}
 }

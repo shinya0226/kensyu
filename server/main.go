@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
@@ -9,24 +12,21 @@ import (
 )
 
 func main() {
-	// インスタンスを作成
 	e := echo.New()
 
-	// ミドルウェアを設定
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	db := mysql.ConnectionDB()
-
+	db, err := mysql.ConnectionDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
 	// ルートを設定
-	e.GET("/", handler.Hello)
-
 	e.POST("/login", handler.Login(loginUsecase))
 
 	// サーバーをポート番号8080で起動
 	e.Logger.Fatal(e.Start(":8080"))
-
 }
