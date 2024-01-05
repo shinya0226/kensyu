@@ -1,6 +1,12 @@
+# kensyu
 #test
 #環境構築手順として.env.exampleファイルをコピーして .envrc ファイルを生成すること。
 #.envrcに環境を構築し、direnv allowコマンドでロードをすること。
+#mysqlのdumpファイルの読み込み 
+1.以下のコマンドをCLIに入力
+mysql -u ${DB_USER} -p -h ${DB_HOST} ${DB_NAME} < /Users/398755_black/Documents/src/kensyu/tool/dump.sql
+2.パスワードを求められたら、${DB_PASS}を入力
+
 #migrationのインストール手順
 1."brew install golang-migrate"　このコマンドをCLIに入力
 2.migration up の実行
