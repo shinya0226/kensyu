@@ -2,8 +2,11 @@ package main
 
 import (
 	"log"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shinya0226/kensyu/handler"
@@ -24,9 +27,18 @@ func main() {
 	userRepo := mysql.NewUserRepository(db)
 	loginUsecase := usecase.NewLoginUsecase(userRepo)
 
-	// ルートを設定
 	e.POST("/login", handler.Login(loginUsecase))
 
-	// サーバーをポート番号8080で起動
+	r := e.Group("/allowed")
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(jwt.MapClaims)
+		},
+		SigningKey: []byte(os.Getenv("JWT_SECRET")),
+	}
+	r.Use(echojwt.WithConfig(config))
+	//　JWT認証
+	r.GET("", handler.Allowed)                        //　http://localhost:8080/allowed
+	r.GET("/accounts/:page", handler.FetchAccounts()) //　http://localhost:8080/allowed/accounts/:page
 	e.Logger.Fatal(e.Start(":8080"))
 }

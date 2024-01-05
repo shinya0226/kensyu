@@ -4,6 +4,7 @@ import (
 	"github.com/shinya0226/kensyu/entity"
 )
 
+// ログイン処理
 type loginUsecase struct {
 	repo entity.IUserRepository
 }
@@ -40,11 +41,8 @@ func (u *loginUsecase) Login(e entity.User) (LoginFormat, error) {
 	}
 	logfo.Name = found.Name
 	logfo.IsAdmin = found.IsAdmin
-
 	//　JWTの作成
 	jwtMessage := createToken(e.Email)
-	//　出力の型を定義
 	logfo.AccessToken = jwtMessage
-
 	return logfo, nil
 }

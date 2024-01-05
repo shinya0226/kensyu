@@ -12,7 +12,6 @@ import (
 	"gopkg.in/testfixtures.v1"
 )
 
-// login_testの実行
 // EmailとPasswordの合致確認
 func TestLogin(t *testing.T) {
 	type user struct {

@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -18,6 +19,11 @@ import (
 	"github.com/shinya0226/kensyu/handler"
 	"github.com/shinya0226/kensyu/usecase"
 )
+
+func TestMain(m *testing.M) {
+	code := m.Run()
+	os.Exit(code)
+}
 
 func TestLogin(t *testing.T) {
 	email := "shinya.yamamoto6@persol-pt.co.jp"
@@ -103,4 +109,20 @@ func TestLogin(t *testing.T) {
 			assert.Equal(t, tt.WantCode, rec.Code)
 		})
 	}
+}
+
+func TestFetchAccounts(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/allowed/accounts/:page")
+	c.SetParamNames("page")
+	c.SetParamValues("1")
+	h := handler.FetchAccounts()
+	err := h(c)
+	if (err != nil) != false {
+		t.Errorf("FetchAccounts() error = %v, wantErr %v", err, false)
+	}
+	assert.Equal(t, http.StatusOK, rec.Code)
 }
